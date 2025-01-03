@@ -27,12 +27,16 @@ input_manager.init = (core, self) => {
 
   // Add event listeners for input events
   window.addEventListener("keydown", (event) => {
-    event.preventDefault();
-    self.keymap[event.key] = true;
+      if (event.key != "F11" && event.key != "F12" && event.key != "F5") {
+          event.preventDefault();
+          self.keymap[event.key] = true;
+      }
   });
   window.addEventListener("keyup", (event) => {
-    event.preventDefault();
-    self.keymap[event.key] = false;
+      if (event.key != "F11" && event.key != "F12" && event.key != "F5") {
+          event.preventDefault();
+          self.keymap[event.key] = false;
+      }
   });
 
   window.addEventListener("mousemove", (event) => {
