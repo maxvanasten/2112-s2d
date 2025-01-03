@@ -438,13 +438,9 @@ export class Core {
      * @returns {game_object} object
      */
     _get_object_by_identifier = (identifier) => {
-        let object = null;
-        this._objects.map((object_, index) => {
-            if (object_.identifier === identifier) {
-                object = object_;
-            }
-        });
-        return object;
+        return this._objects.find(
+            (object) => object.identifier === identifier || null
+        );
     };
 
     _get_objects_by_identifier = (identifier) => {
