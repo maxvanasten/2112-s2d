@@ -523,7 +523,7 @@ export class Core {
      */
     _update_objects = (delta) => {
         // Keep track of the amount of updated objects this frame
-        this._updated_objects_count = 0;
+        this._updated_objects_count = this._update_queue.length;
 
         // Update objects
         this._update_queue.map((update_item, index) => {
@@ -552,9 +552,6 @@ export class Core {
             if (update_item.self.flags.IS_PLAYER) {
                 this._update_camera_position();
             }
-
-            // Keep track of the amount of updated objects this frame
-            this._updated_objects_count++;
         });
     };
 
@@ -600,7 +597,7 @@ export class Core {
      */
     _render_objects = () => {
         // Keep track of the amount of rendered objects this frame
-        this._rendered_objects_count = 0;
+        this._rendered_objects_count = this._render_queue.length;
 
         // Sort render queue by render layer
         this._render_queue.sort((a, b) => {
@@ -679,9 +676,6 @@ export class Core {
                     collision_box.height
                 );
             }
-
-            // Keep track of the amount of rendered objects this frame
-            this._rendered_objects_count++;
         });
     };
 }
