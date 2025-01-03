@@ -112,6 +112,12 @@ export class Core {
         });
     };
 
+    _import_objects = (raw_objects) => {
+        raw_objects.map((raw_object, index) => {
+            this._spawn_object(raw_object);
+        });
+    };
+
     /**
      * @method _spawn_object
      * @description Spawns a game object.
