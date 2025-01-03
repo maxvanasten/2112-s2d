@@ -1,0 +1,22 @@
+{
+    "name": "2112-s2d",
+    "version": "0.0.0",
+    "description": "2112, ported to S2D engine.",
+    "main": "server.mjs",
+    "scripts": {
+        "start": "node server.mjs"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/maxvanasten/2112-s2d.git"
+    },
+    "author": "Max van Asten",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/maxvanasten/2112-s2d/issues"
+    },
+    "homepage": "https://github.com/maxvanasten/2112-s2d#readme",
+    "dependencies": {
+        "express": "^4.21.2"
+    }
+}
