@@ -27,7 +27,6 @@ export default {
     },
     // Render elements based on type
     render: (core, self, context, position) => {
-        console.log("RENDERING UI ELEMENTS");
         self.elements.forEach((element, index) => {
             element.forEach((component) => {
                 switch (component.type) {

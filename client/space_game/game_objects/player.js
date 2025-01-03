@@ -10,7 +10,7 @@ export default {
         render_width: 100,
         render_height: 90,
     },
-    render_layer: 1,
+    render_layer: 3,
     global_position: {
         x: 100,
         y: 100,
