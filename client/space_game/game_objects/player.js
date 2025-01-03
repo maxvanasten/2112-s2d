@@ -117,7 +117,16 @@ export default {
             self.current_ship.speed_decay
         );
 
-        // Add position/rotation to UI
+        // Constrain position to map size
+        const map_max =
+            core._get_object_by_identifier("planet_manager").options
+                .max_position;
+        if (self.global_position.x < 0) self.global_position.x = 0;
+        if (self.global_position.y < 0) self.global_position.y = 0;
+        if (self.global_position.x > map_max.x)
+            self.global_position.x = map_max.x;
+        if (self.global_position.y > map_max.y)
+            self.global_position.y = map_max.y;
     },
 
     actions: [
