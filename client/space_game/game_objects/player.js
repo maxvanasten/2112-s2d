@@ -48,12 +48,16 @@ export default {
         const ui = core._get_object_by_identifier("ui_manager");
         const player_location_element = [];
 
+        const ui_x = 0;
+        const ui_y = 0;
+        const ui_width = innerWidth;
+        const ui_height = innerHeight / 16;
         // Background
         const bg_component = ui.generate_rectangle(
-            innerWidth / 16,
-            innerHeight / 16,
-            innerWidth / 4,
-            innerHeight / 16,
+            ui_x,
+            ui_y,
+            ui_width,
+            ui_height,
             "white"
         );
         // Text
@@ -61,8 +65,8 @@ export default {
             "x=0, y=0, fps=0",
             innerWidth / 64,
             {
-                x: innerWidth / 16 + innerWidth / 4 / 2,
-                y: innerHeight / 16 + innerHeight / 16 / 2 + innerHeight / 64,
+                x: ui_x + ui_width / 2,
+                y: ui_y + ui_height / 2 + innerHeight / 64,
             },
             "center",
             "black"
@@ -73,7 +77,14 @@ export default {
                 player.global_position.x
             )}, y=${Math.floor(player.global_position.y)}, fps=${Math.floor(
                 core._average_frames_per_second
-            )}`;
+            )} Updates=${core._updated_objects_count}, Renders=${
+                core._rendered_objects_count
+            } Velocity=${player.current_ship.velocity
+                .magnitude()
+                .toFixed(2)} Planets=${
+                core._get_object_by_identifier("planet_manager").options
+                    .planet_amount
+            }`;
         };
 
         player_location_element.push(bg_component);
