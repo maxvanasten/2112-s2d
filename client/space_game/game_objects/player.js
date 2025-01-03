@@ -173,5 +173,50 @@ export default {
                 self.current_ship.rotation -= self.current_ship.base_turn_speed;
             },
         },
+        // {
+        //     type: "keyboard",
+        //     key: "e",
+        //     while_key_down: (core, self) => {
+        //         if (Date.now() - self.last_switched_ships < 1000) return;
+        //         if (self.current_ship.velocity.magnitude() > 50) return;
+        //         self.last_switched_ships = Date.now();
+        //         if (
+        //             self.current_ship ==
+        //             core._get_object_by_identifier("mothership")
+        //         ) {
+        //             self.current_ship =
+        //                 core._get_object_by_identifier("vessel");
+        //             core._get_object_by_identifier("vessel").active = true;
+        //             core._get_object_by_identifier("mothership").active = false;
+        //         } else {
+        //             self.current_ship =
+        //                 core._get_object_by_identifier("mothership");
+        //             core._get_object_by_identifier("vessel").active = false;
+        //             core._get_object_by_identifier("mothership").active = true;
+        //         }
+
+        //         self.global_position = self.current_ship.global_position;
+        //     },
+        // },
+        // // Dock vessel to mothership if close enough
+        // {
+        //     type: "keyboard",
+        //     key: " ",
+        //     while_key_down: (core, self) => {
+        //         if (Date.now() - self.last_docked_vessel < 1000) return;
+        //         if (self.current_ship.identifier == "mothership") return;
+        //         if (
+        //             self.current_ship.global_position.distance(
+        //                 core._get_object_by_identifier("mothership")
+        //             ) < 1000
+        //         ) {
+        //             self.current_ship =
+        //                 core._get_object_by_identifier("mothership");
+        //             core._get_object_by_identifier("vessel").active = false;
+        //             core._get_object_by_identifier("vessel").docked = true;
+        //             core._get_object_by_identifier("mothership").active = true;
+        //         }
+        //     },
+        // },
     ],
 };
