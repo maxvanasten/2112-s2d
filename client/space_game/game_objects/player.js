@@ -22,12 +22,27 @@ export default {
         height: 90,
     },
     init: (core, self) => {
-        self.movement_vector = Vector2D.ZERO();
-        self.acceleration = Vector2D.ZERO();
-        self.velocity = Vector2D.ZERO();
-        self.speed = 10;
-        self.rotation = 0;
-        self.turn_speed = 0.03;
+        (self.global_position.x =
+            core._get_object_by_identifier("planet_manager").options
+                .max_position.x / 2),
+            (self.global_position.y =
+                core._get_object_by_identifier("planet_manager").options
+                    .max_position.y / 2),
+            (self.ships = {
+                mothership: {
+                    position: Vector2D.from_x_and_y(0, 0),
+                    acceleration: Vector2D.from_x_and_y(0, 0),
+                    velocity: Vector2D.from_x_and_y(0, 0),
+                    rotation: 0,
+                    speed: 20,
+                    base_turn_speed: 0.01,
+                    speed_decay: 0.98,
+                    reverse_speed_mult: 0.5,
+                },
+            });
+        self.current_ship = self.ships.mothership;
+        // self.last_switched_ships = 0;
+        // self.last_docked_vessel = 0;
 
         // Start player ui
         const ui = core._get_object_by_identifier("ui_manager");
@@ -66,25 +81,30 @@ export default {
 
         ui.add_element(ui, player_location_element);
     },
-    // render: (core, self, context, position) => {
-    //     context.drawImage(self.sprite.image, self.sprite.source_width, self.sprite.source_height, self.sprite.render_width, self.sprite.render_height, position.x, position.y, self.sprite.render_width, self.sprite.render_height);
-    // }
     update: (core, self, delta) => {
         // Cap rotation values between min and max of -2PI and 2PI
-        if (self.rotation > Math.PI * 2)
-            self.rotation = self.rotation - Math.PI * 2;
-        if (self.rotation < -Math.PI * 2)
-            self.rotation = self.rotation + Math.PI * 2;
+        if (self.current_ship.rotation > Math.PI * 2)
+            self.current_ship.rotation =
+                self.current_ship.rotation - Math.PI * 2;
+        if (self.current_ship.rotation < -Math.PI * 2)
+            self.current_ship.rotation =
+                self.current_ship.rotation + Math.PI * 2;
+        self.rotation = self.current_ship.rotation;
         // Add acceleration to velocity
-        self.velocity = self.velocity.add(self.acceleration);
+        self.current_ship.velocity = self.current_ship.velocity.add(
+            self.current_ship.acceleration
+        );
         // Reset acceleration to 0
-        self.acceleration = self.acceleration.scale(0);
+        self.current_ship.acceleration =
+            self.current_ship.acceleration.scale(0);
         // Add velocity to position
         self.global_position = self.global_position.add(
-            self.velocity.scale(delta)
+            self.current_ship.velocity.scale(delta)
         );
         // Reduce velocity each frame
-        self.velocity = self.velocity.scale(0.995);
+        self.current_ship.velocity = self.current_ship.velocity.scale(
+            self.current_ship.speed_decay
+        );
 
         // Add position/rotation to UI
     },
@@ -94,34 +114,43 @@ export default {
             type: "keyboard",
             key: "w",
             while_key_down: (core, self) => {
-                const direction = Vector2D.from_angle(self.rotation);
-                self.acceleration = self.acceleration.add(
-                    direction.scale(self.speed)
+                const direction = Vector2D.from_angle(
+                    self.current_ship.rotation
                 );
+                self.current_ship.acceleration =
+                    self.current_ship.acceleration.add(
+                        direction.scale(self.current_ship.speed)
+                    );
             },
         },
         {
             type: "keyboard",
             key: "d",
             while_key_down: (core, self) => {
-                self.rotation += self.turn_speed;
+                self.current_ship.rotation += self.current_ship.base_turn_speed;
             },
         },
         {
             type: "keyboard",
             key: "s",
             while_key_down: (core, self) => {
-                const direction = Vector2D.from_angle(self.rotation);
-                self.acceleration = self.acceleration.add(
-                    direction.scale(-self.speed * 0.25)
+                const direction = Vector2D.from_angle(
+                    self.current_ship.rotation
                 );
+                self.current_ship.acceleration =
+                    self.current_ship.acceleration.add(
+                        direction.scale(
+                            -self.current_ship.speed *
+                                self.current_ship.reverse_speed_mult
+                        )
+                    );
             },
         },
         {
             type: "keyboard",
             key: "a",
             while_key_down: (core, self) => {
-                self.rotation -= self.turn_speed;
+                self.current_ship.rotation -= self.current_ship.base_turn_speed;
             },
         },
     ],
