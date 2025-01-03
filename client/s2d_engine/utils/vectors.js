@@ -117,9 +117,12 @@ export class Vector2D {
      * @returns {number} distance
      */
     distance = (vector2d) => {
-        const a = Vector2D.copy(this);
-        const b = Vector2D.copy(vector2d);
-        return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
+        // const a = Vector2D.copy(this);
+        // const b = Vector2D.copy(vector2d);
+        // return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
+        const dx = this.x - vector2d.x;
+        const dy = this.y - vector2d.y;
+        return Math.hypot(dx, dy);
     };
 
     angle = () => {
