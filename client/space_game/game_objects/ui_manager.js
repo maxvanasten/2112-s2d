@@ -14,6 +14,15 @@ export default {
         })
 
         self.font_family = "game_font";
+        self.font_sizes = {
+            header: innerWidth/16,
+            normal: innerWidth/64,
+        }
+        self.colors = {
+            text: "rgba(254,159,40,1)",
+            body: "rgba(35,22,8,1)",
+            border: "rgba(35,22,8,0.8)"
+        }
     },
     // Add element to UI manager
     add_element: (self, element) => {
@@ -43,13 +52,14 @@ export default {
                         context.font = `${component.font_size}px ${self.font_family}`;
                         context.textAlign = component.align;
                         context.fillStyle = component.fill_color;
-
-                        context.fillText(
-                            component.text,
-                            component.position.x,
-                            component.position.y
-                        );
-
+                        component.text.forEach((line, index) => {
+                            context.fillText(
+                                line,
+                                component.position.x,
+                                component.position.y +
+                                    index * component.font_size
+                            );
+                        });
                         if (component.stroke) {
                             context.strokeStyle = component.stroke_color;
                             context.lineWidth = component.stroke_weight;

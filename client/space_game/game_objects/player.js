@@ -22,25 +22,29 @@ export default {
         height: 90,
     },
     init: (core, self) => {
-        (self.global_position.x =
+        self.global_position.x =
             core._get_object_by_identifier("planet_manager").options
-                .max_position.x / 2),
-            (self.global_position.y =
-                core._get_object_by_identifier("planet_manager").options
-                    .max_position.y / 2),
-            (self.ships = {
-                mothership: {
-                    position: Vector2D.from_x_and_y(0, 0),
-                    acceleration: Vector2D.from_x_and_y(0, 0),
-                    velocity: Vector2D.from_x_and_y(0, 0),
-                    rotation: 0,
-                    speed: 20,
-                    base_turn_speed: 0.01,
-                    speed_decay: 0.98,
-                    reverse_speed_mult: 0.5,
-                },
-            });
+                .max_position.x / 2;
+        self.global_position.y =
+            core._get_object_by_identifier("planet_manager").options
+                .max_position.y / 2;
+        self.ships = {
+            mothership: {
+                position: Vector2D.from_x_and_y(0, 0),
+                acceleration: Vector2D.from_x_and_y(0, 0),
+                velocity: Vector2D.from_x_and_y(0, 0),
+                rotation: 0,
+                speed: 10,
+                base_turn_speed: 0.015,
+                speed_decay: 0.98,
+                reverse_speed_mult: 0.5,
+                max_fuel: 1000,
+                fuel: 0,
+                fuel_usage: 0.01,
+            },
+        };
         self.current_ship = self.ships.mothership;
+        self.current_ship.fuel = self.current_ship.max_fuel;
         // self.last_switched_ships = 0;
         // self.last_docked_vessel = 0;
 
@@ -62,7 +66,7 @@ export default {
         );
         // Text
         const text_component = ui.generate_text(
-            "x=0, y=0, fps=0",
+            ["x=0, y=0, fps=0"],
             innerWidth / 64,
             {
                 x: ui_x + ui_width / 2,
@@ -73,7 +77,7 @@ export default {
         );
         text_component.update = (core, self, delta) => {
             const player = core._get_object_by_identifier("player");
-            self.text = `x=${Math.floor(
+            self.text[0] = `x=${Math.floor(
                 player.global_position.x
             )}, y=${Math.floor(player.global_position.y)}, fps=${Math.floor(
                 core._average_frames_per_second
@@ -90,7 +94,73 @@ export default {
         player_location_element.push(bg_component);
         player_location_element.push(text_component);
 
-        ui.add_element(ui, player_location_element);
+        // NOTE: Toggle debug ui
+        // ui.add_element(ui, player_location_element);
+
+        // NOTE: DASHBOARD UI
+        const dashboard_ui = [];
+
+        const dashboard_ui_w = innerWidth / 4;
+        const dashboard_ui_h = innerHeight / 8;
+        const dashboard_ui_x = innerWidth / 64;
+        const dashboard_ui_y = innerHeight - innerHeight / 64 - dashboard_ui_h;
+
+        const dashboard_bg = ui.generate_rectangle(
+            dashboard_ui_x,
+            dashboard_ui_y,
+            dashboard_ui_w,
+            dashboard_ui_h,
+            ui.colors.body,
+            true,
+            ui.colors.border,
+            10
+        );
+        const dashboard_text = ui.generate_text(
+            [`Location: `, `Fuel: `, `Velocity: `],
+            ui.font_sizes.normal,
+            {
+                x: dashboard_ui_x + dashboard_ui_w / 2,
+                y: dashboard_ui_y + dashboard_ui_h / 4,
+            },
+            "center",
+            ui.colors.text
+        );
+        dashboard_text.update = (core, self, delta) => {
+            const player = core._get_object_by_identifier("player");
+            self.text[0] = `Location: ${Math.floor(
+                player.global_position.x
+            )}:${Math.floor(player.global_position.y)}`;
+            self.text[1] = `Fuel: ${Math.floor(player.current_ship.fuel)}/${
+                player.current_ship.max_fuel
+            } L`;
+            self.text[2] = `Velocity: ${Math.floor(
+                player.current_ship.velocity.magnitude()
+            )} U/s`;
+        };
+
+        dashboard_ui.push(dashboard_bg);
+        dashboard_ui.push(dashboard_text);
+        ui.add_element(ui, dashboard_ui);
+
+        // NOTE: FPS Counter
+        const fps_element = [];
+        const fps_text = ui.generate_text(
+            ["0"],
+            ui.font_sizes.header,
+            {
+                x: innerWidth - innerWidth / 24,
+                y: innerHeight - innerHeight / 32,
+            },
+            "center",
+            "rgba(255, 100, 100, 0.5)"
+        );
+        fps_text.update = (core, self, delta) => {
+            if (core._average_frames_per_second == Infinity) return;
+            self.text[0] = Math.floor(core._average_frames_per_second);
+        };
+
+        fps_element.push(fps_text);
+        ui.add_element(ui, fps_element);
     },
     update: (core, self, delta) => {
         // Cap rotation values between min and max of -2PI and 2PI
@@ -134,6 +204,9 @@ export default {
             type: "keyboard",
             key: "w",
             while_key_down: (core, self) => {
+                // If fuel
+                if (!self.current_ship.fuel) return;
+                self.current_ship.fuel -= self.current_ship.fuel_usage;
                 const direction = Vector2D.from_angle(
                     self.current_ship.rotation
                 );

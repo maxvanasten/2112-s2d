@@ -4,7 +4,7 @@ export default {
     identifier: "planet_manager",
     flags: ["ALWAYS_UPDATE"],
     options: {
-        planet_amount: 500,
+        planet_amount: 2000,
         planet_min_size: 200,
         planet_max_size: 500,
         min_position: Vector2D.from_x_and_y(0, 0),
