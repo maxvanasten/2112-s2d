@@ -314,10 +314,8 @@ export class Core {
      * @param {Vector2D} global_position
      * @returns {Vector2D} screen_position
      */
-    _global_to_screen = (global_position) => {
-        const screen_position = global_position.subtract(this._camera_position);
-        return screen_position;
-    };
+    _global_to_screen = (global_position) =>
+        global_position.subtract(this._camera_position);
 
     /**
      * @method _screen_to_global
