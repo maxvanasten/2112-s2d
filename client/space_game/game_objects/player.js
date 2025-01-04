@@ -7,8 +7,8 @@ export default {
         image_path: "space_game/assets/textures/big_ship_0.png",
         source_width: 180,
         source_height: 169,
-        render_width: 100,
-        render_height: 90,
+        render_width: 80,
+        render_height: 65,
     },
     render_layer: 3,
     global_position: {
