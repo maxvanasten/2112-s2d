@@ -1,5 +1,5 @@
 import { Core } from "./s2d_engine/core.js";
-import Game from "./space_game/main.js";
+import Game from "./space_game/game.js";
 
 const core = new Core();
 

@@ -34,8 +34,6 @@ const Game = {
                     raw_planet_objects.push(self.generate_planet(self, i));
                 }
                 core._import_objects(raw_planet_objects);
-                // TODO: Dont add planets to core objects but to planet_manager objects for performance
-                // TODO: planet_manager must then render planets
             },
             generate_planet: (self, index) => {
                 const size =
@@ -97,7 +95,5 @@ const Game = {
                 };
             },
         },
-    ],
-};
 
 export default Game;
