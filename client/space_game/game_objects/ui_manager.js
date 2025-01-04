@@ -5,6 +5,15 @@ export default {
     init: (core, self) => {
         self.elements = [];
         self.maximum_elements = 10;
+
+        // Load font
+        const font = new FontFace('game_font', 'url(space_game/assets/fonts/8bit2.ttf)');
+        font.load().then((font) => {
+            document.fonts.add(font);
+            console.log(`Font loaded`);
+        })
+
+        self.font_family = "game_font";
     },
     // Add element to UI manager
     add_element: (self, element) => {
@@ -31,7 +40,7 @@ export default {
             element.forEach((component) => {
                 switch (component.type) {
                     case "text":
-                        context.font = `${component.font_size}px Arial`;
+                        context.font = `${component.font_size}px ${self.font_family}`;
                         context.textAlign = component.align;
                         context.fillStyle = component.fill_color;
 
