@@ -209,15 +209,15 @@ export default {
             key: "w",
             while_key_down: (core, self) => {
                 // If fuel
-                if (!self.current_ship.fuel) return;
+                const speed = self.current_ship.speed;
+                if (!self.current_ship.fuel)
+                    speed = self.current_ship.speed * 0.2;
                 self.current_ship.fuel -= self.current_ship.fuel_usage;
                 const direction = Vector2D.from_angle(
                     self.current_ship.rotation
                 );
                 self.current_ship.acceleration =
-                    self.current_ship.acceleration.add(
-                        direction.scale(self.current_ship.speed)
-                    );
+                    self.current_ship.acceleration.add(direction.scale(speed));
             },
         },
         {
