@@ -17,6 +17,7 @@
     },
     "homepage": "https://github.com/maxvanasten/2112-s2d#readme",
     "dependencies": {
+        "@types/node": "^22.10.5",
         "express": "^4.21.2"
     }
 }

@@ -7,22 +7,25 @@ export default {
         self.maximum_elements = 10;
 
         // Load font
-        const font = new FontFace('game_font', 'url(space_game/assets/fonts/8bit2.ttf)');
+        const font = new FontFace(
+            "game_font",
+            "url(space_game/assets/fonts/8bit2.ttf)"
+        );
         font.load().then((font) => {
             document.fonts.add(font);
             console.log(`Font loaded`);
-        })
+        });
 
         self.font_family = "game_font";
         self.font_sizes = {
-            header: innerWidth/16,
-            normal: innerWidth/64,
-        }
+            header: innerWidth / 16,
+            normal: innerWidth / 64,
+        };
         self.colors = {
             text: "rgba(254,159,40,1)",
             body: "rgba(35,22,8,1)",
-            border: "rgba(35,22,8,0.8)"
-        }
+            border: "rgba(35,22,8,0.8)",
+        };
     },
     // Add element to UI manager
     add_element: (self, element) => {
