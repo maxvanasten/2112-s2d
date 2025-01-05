@@ -52,8 +52,48 @@ export default {
         const quest = quest_manager.generate_quest();
         quest_manager.current_quest = quest;
 
-        // Start player ui
         const ui = core._get_object_by_identifier("ui_manager");
+
+        // Tooltip ui
+        const tooltip_ui_w = innerWidth / 2;
+        const tooltip_ui_h = innerHeight / 8;
+        const tooltip_ui_x = innerWidth / 2 - tooltip_ui_w / 2;
+        const tooltip_ui_y = innerHeight - tooltip_ui_h - innerHeight / 8;
+
+        const tooltip_ui_background = ui.generate_rectangle(
+            tooltip_ui_x,
+            tooltip_ui_y,
+            tooltip_ui_w,
+            tooltip_ui_h,
+            ui.colors.body,
+            true,
+            ui.colors.border,
+            10
+        );
+
+        const tooltip_ui_text = ui.generate_text(
+            [],
+            innerWidth / 64,
+            {
+                x: tooltip_ui_x + tooltip_ui_w / 2,
+                y: tooltip_ui_y + tooltip_ui_h / 2,
+            },
+            "center",
+            ui.colors.text
+        );
+        tooltip_ui_text.display_time = 3500;
+        tooltip_ui_text.last_changed = Date.now();
+        tooltip_ui_text.update = (core, self, delta) => {
+            if (Date.now() - self.last_changed >= self.display_time) {
+                self.text = [];
+            }
+        };
+
+        const tooltip_ui = [tooltip_ui_text];
+
+        ui.add_element(ui, tooltip_ui, "tooltip");
+
+        // Start player ui
         const player_location_element = [];
 
         const ui_x = 0;
@@ -248,6 +288,13 @@ export default {
             key: "a",
             while_key_down: (core, self) => {
                 self.current_ship.rotation -= self.current_ship.base_turn_speed;
+            },
+        },
+        {
+            type: "keyboard",
+            key: " ",
+            while_key_down: (core, self) => {
+                // Interact with planet
             },
         },
         // {

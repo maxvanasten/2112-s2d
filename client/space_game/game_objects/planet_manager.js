@@ -50,6 +50,7 @@ export default {
                 render_width: size,
                 render_height: size,
             },
+            size: size / 2,
             render_layer: 0,
             global_position: {
                 x:
@@ -83,6 +84,45 @@ export default {
             },
             update: (core, self, delta) => {
                 self.rotation += self.rotation_speed * delta;
+
+                // Check if player can interact
+                const player = core._get_object_by_identifier("player");
+
+                if (
+                    player.global_position.distance(self.global_position) <
+                    self.size
+                ) {
+                    self.in_range = true;
+                } else {
+                    self.in_range = false;
+                }
+            },
+            render: (core, self, context, position) => {
+                // Draw circle around interactable planet
+                if (!self.in_range) return;
+
+                const screen_position = core._global_to_screen(
+                    self.global_position
+                );
+
+                context.beginPath();
+                context.arc(
+                    screen_position.x,
+                    screen_position.y,
+                    self.size,
+                    0,
+                    2 * Math.PI
+                );
+                context.strokeStyle =
+                    core._get_object_by_identifier("ui_manager").colors.text;
+                context.lineWidth = 3;
+                context.stroke();
+
+                // Draw interact text
+                const ui = core._get_object_by_identifier("ui_manager");
+                ui.update_text(ui, "tooltip", [
+                    "Press <space> to interact with a planet.",
+                ]);
             },
         };
     },
