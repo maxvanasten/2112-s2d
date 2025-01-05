@@ -63,6 +63,44 @@ export default {
             raw_planet_objects.push(self.generate_planet(self, i, name));
         }
         core._import_objects(raw_planet_objects);
+
+        // Spawn planet popup ui
+        const ui = core._get_object_by_identifier("ui_manager");
+
+        const popup_ui_w = innerWidth / 4;
+        const popup_ui_h = innerHeight - innerHeight / 4;
+        const popup_ui_x = innerWidth - popup_ui_w - innerWidth / 16;
+        const popup_ui_y = innerHeight - popup_ui_h - innerHeight / 8;
+
+        const popup_ui_body = ui.generate_rectangle(
+            popup_ui_x,
+            popup_ui_y,
+            popup_ui_w,
+            popup_ui_h,
+            ui.colors.body,
+            true,
+            ui.colors.border,
+            20
+        );
+        const popup_ui_planet_title = ui.generate_text(
+            [`0_planet_name`],
+            innerWidth / 48,
+            {
+                x: popup_ui_x + popup_ui_w / 2,
+                y: popup_ui_y + popup_ui_h / 20,
+            },
+            "center",
+            ui.colors.text
+        );
+        popup_ui_planet_title.update = (core, self, delta) => {
+            const player = core._get_object_by_identifier("player");
+            if (player.planet.name == self.text[0]) return;
+            self.text[0] = player.planet.name;
+        };
+
+        const popup_ui = [popup_ui_body, popup_ui_planet_title];
+
+        ui.add_element(ui, popup_ui, "popup_ui", false);
     },
     generate_planet: (self, index, name) => {
         const size =
@@ -126,13 +164,27 @@ export default {
                 // Check if player can interact
                 const player = core._get_object_by_identifier("player");
 
+                // TODO: get popup element reference from ui manager
+                const ui = core._get_object_by_identifier("ui_manager");
+                const popup_ui = ui.get_element(ui, "popup_ui");
                 if (
                     player.global_position.distance(self.global_position) <
                     self.size
                 ) {
                     self.in_range = true;
+                    player.planet = self;
+                    // NOTE: set data on popup element
+                    popup_ui.data = {
+                        planet_name: self.name,
+                        //TODO: Make dynamic planet descriptions that involve the utilities the planet has
+                    };
+                    popup_ui.visible = true;
                 } else {
+                    if (!self.in_range) return;
                     self.in_range = false;
+                    // Unset
+                    player.planet = false;
+                    popup_ui.visible = false;
                 }
             },
             render: (core, self, context, position) => {

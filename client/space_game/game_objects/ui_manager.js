@@ -1,3 +1,5 @@
+// TODO: Add optional delay for ui elements, they will despawn after the delay.
+
 export default {
     identifier: "ui_manager",
     flags: ["ALWAYS_UPDATE", "ALWAYS_RENDER", "IS_UI"],
@@ -54,23 +56,26 @@ export default {
             });
         });
     },
-    update_text: (self, identifier, new_text) => {
+    update_text: (self, identifier, new_text, delay) => {
         Object.keys(self.elements).forEach((element_identifier, index) => {
             if (element_identifier == identifier) {
                 const element = self.elements[element_identifier];
                 element.forEach((component) => {
                     if (component.text) {
-                        component.text = new_text
+                        component.text = new_text;
+                        component.display_time =
+                            delay || component.display_time;
                         component.last_changed = Date.now();
                     }
-                })
+                });
             }
-        })
+        });
     },
     // Render elements based on type
     render: (core, self, context, position) => {
         Object.keys(self.elements).forEach((element_identifier, index) => {
             const element = self.elements[element_identifier];
+            if (!element.visible) return;
             element.forEach((component) => {
                 switch (component.type) {
                     case "text":
