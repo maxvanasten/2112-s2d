@@ -28,15 +28,20 @@ export default {
         };
     },
     // Add element to UI manager
-    add_element: (self, element, identifier) => {
+    add_element: (self, element, identifier, visible) => {
         // if (self.elements.length < self.maximum_elements) {
         //     self.elements.push(element);
         // } else {
         //     self.elements.shift();
         //     self.elements.push(element);
         // }
-
+        element.visible = true;
+        if (!visible) element.visible = false;
         self.elements[identifier] = element;
+    },
+    get_element: (self, identifier) => {
+        if (self.elements[identifier]) return self.elements[identifier];
+        return false;
     },
     // Update elements based on update func
     update: (core, self, delta) => {

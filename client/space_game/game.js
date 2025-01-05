@@ -60,7 +60,7 @@ const Game = {
                         self.text = [];
                     }
                 };
-                ui.add_element(ui, [quest_text]);
+                ui.add_element(ui, [quest_text], "quest_ui", true);
             },
             update: (core, self, delta) => {
                 // Check quest progress

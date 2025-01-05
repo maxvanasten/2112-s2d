@@ -92,7 +92,7 @@ export default {
 
         const tooltip_ui = [tooltip_ui_text];
 
-        ui.add_element(ui, tooltip_ui, "tooltip");
+        ui.add_element(ui, tooltip_ui, "tooltip", true);
 
         // Start player ui
         const player_location_element = [];
@@ -185,7 +185,7 @@ export default {
 
         dashboard_ui.push(dashboard_bg);
         dashboard_ui.push(dashboard_text);
-        ui.add_element(ui, dashboard_ui, "dashboard");
+        ui.add_element(ui, dashboard_ui, "dashboard", true);
 
         // NOTE: FPS Counter
         const fps_element = [];
@@ -205,7 +205,7 @@ export default {
         };
 
         fps_element.push(fps_text);
-        ui.add_element(ui, fps_element, "fps");
+        ui.add_element(ui, fps_element, "fps", false);
     },
     update: (core, self, delta) => {
         // Cap rotation values between min and max of -2PI and 2PI
