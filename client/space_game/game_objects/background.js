@@ -4,7 +4,7 @@ export default {
     identifier: "background",
     flags: ["ALWAYS_RENDER", "ALWAYS_UPDATE"],
     render_layer: -1000,
-    texture_size: 1000,
+    texture_size: 1500,
     loaded: false,
     generated: false,
     textures: [],
