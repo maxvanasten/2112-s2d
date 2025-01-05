@@ -18,7 +18,7 @@ import tilemap_manager from "./internal_objects/tilemap_manager.js";
  * @property { number[] } _frame_record - Record of frames per second measurements.
  * @property { number } _average_frames_per_second - Average frames per second (over the last 500 measurements).
  *
- * @property {GameObject[]} _objects - Objects array.
+ * @property {GameObject{}} _objects - Objects array.
  * @property {string} _player_object_identifier - Identifier of the player object, is used for updating the camera position and determining wether or not objects will be updated and/or rendered.
  *
  * @property {Vector2D} _camera_position - Camera position.
@@ -49,7 +49,7 @@ export class Core {
             RENDER_COLLISION_BOXES: false,
         };
 
-        this._objects = [];
+        this._objects = {};
         this._player_object_identifier = null;
 
         this._camera_position = Vector2D.ZERO();
@@ -86,7 +86,7 @@ export class Core {
                     case "input_manager":
                         input_manager.init(this, input_manager);
                         input_manager._is_initialized = true;
-                        this._objects.push(input_manager);
+                        this._objects["input_manager"] = input_manager;
                         break;
                     case "tilemap_manager":
                         tilemap_manager.init(
@@ -95,7 +95,7 @@ export class Core {
                             game.tilemap
                         );
                         tilemap_manager._is_initialized = true;
-                        this._objects.push(tilemap_manager);
+                        this._objects["tilemap_manager"] = tilemap_manager;
                         break;
                     default:
                         console.warn(
@@ -126,7 +126,7 @@ export class Core {
      */
     _spawn_object = (raw_object) => {
         const parsed_object = this._parse_object(raw_object);
-        this._objects.push(parsed_object);
+        this._objects[parsed_object.identifier] = parsed_object;
     };
 
     _destroy_object = (identifier) => {
@@ -221,7 +221,7 @@ export class Core {
         // Parse actions
         if (raw_object.actions) {
             const input_manager = this._get_object_by_identifier(
-                "INTERNAL_input_manager"
+                "input_manager"
             );
             if (!input_manager) {
                 console.warn(
@@ -391,7 +391,8 @@ export class Core {
             }
 
             // Select objects for rendering and updating
-            this._objects.map((object, index) => {
+            Object.keys(this._objects).forEach((object_key, index) => {
+                const object = this._objects[object_key];
                 // Keep track of wether or not the object has been updated/rendered
                 let update_object = false;
                 let render_object = false;
@@ -442,9 +443,13 @@ export class Core {
      * @returns {game_object} object
      */
     _get_object_by_identifier = (identifier) => {
-        return this._objects.find(
-            (object) => object.identifier === identifier || null
-        );
+        // return this._objects.find(
+            // (object) => object.identifier === identifier || null
+        // );
+        if (this._objects[identifier]) {
+            return this._objects[identifier];
+        }
+        return false;
     };
 
     _get_objects_by_identifier = (identifier) => {
