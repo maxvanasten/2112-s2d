@@ -4,7 +4,7 @@ export default {
     identifier: "planet_manager",
     flags: ["ALWAYS_UPDATE"],
     options: {
-        planet_amount: 2000,
+        planet_amount: 1000,
         planet_min_size: 200,
         planet_max_size: 500,
         min_position: Vector2D.from_x_and_y(0, 0),
@@ -21,13 +21,50 @@ export default {
         ],
     },
     init: (core, self) => {
+        self.planet_names = [
+            "Auron",
+            "Caldera",
+            "Meridia",
+            "Solara",
+            "Borealis",
+            "Vespera",
+            "Erythra",
+            "Lythos",
+            "Cendara",
+            "Orona",
+            "Selvara",
+            "Halcyon",
+            "Zephyra",
+            "Altara",
+            "Elara",
+            "Marineris",
+            "Dione",
+            "Thalassa",
+            "Pyralis",
+            "Meliora",
+            "Castora",
+            "Avandra",
+            "Serona",
+            "Lyonesse",
+            "Peridia",
+            "Tethys",
+            "Arcturus",
+            "Vesperis",
+            "Amara",
+            "Solis",
+        ];
         let raw_planet_objects = [];
         for (let i = 0; i < self.options.planet_amount; i++) {
-            raw_planet_objects.push(self.generate_planet(self, i));
+            const name = `${
+                self.planet_names[
+                    Math.floor(Math.random() * self.planet_names.length)
+                ]
+            }-${Math.floor(Math.random() * 1000)}`;
+            raw_planet_objects.push(self.generate_planet(self, i, name));
         }
         core._import_objects(raw_planet_objects);
     },
-    generate_planet: (self, index) => {
+    generate_planet: (self, index, name) => {
         const size =
             self.options.planet_min_size +
             Math.floor(
@@ -43,6 +80,7 @@ export default {
 
         return {
             identifier: "planet_" + index,
+            name: name || "???",
             sprite: {
                 image_path: `space_game/assets/textures/${texture_name}.png`,
                 source_width: 200,
@@ -120,9 +158,12 @@ export default {
 
                 // Draw interact text
                 const ui = core._get_object_by_identifier("ui_manager");
-                ui.update_text(ui, "tooltip", [
-                    "Press <space> to interact with a planet.",
-                ]);
+                ui.update_text(
+                    ui,
+                    "tooltip",
+                    [`Press <space> to interact with ${self.name}`],
+                    100
+                );
             },
         };
     },

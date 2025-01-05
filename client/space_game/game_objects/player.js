@@ -21,6 +21,7 @@ export default {
         width: 100,
         height: 90,
     },
+    planet: false,
     init: (core, self) => {
         self.global_position.x =
             core._get_object_by_identifier("planet_manager").options
