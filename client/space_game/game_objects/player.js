@@ -184,7 +184,7 @@ export default {
 
         dashboard_ui.push(dashboard_bg);
         dashboard_ui.push(dashboard_text);
-        ui.add_element(ui, dashboard_ui);
+        ui.add_element(ui, dashboard_ui, "dashboard");
 
         // NOTE: FPS Counter
         const fps_element = [];
@@ -204,7 +204,7 @@ export default {
         };
 
         fps_element.push(fps_text);
-        ui.add_element(ui, fps_element);
+        ui.add_element(ui, fps_element, "fps");
     },
     update: (core, self, delta) => {
         // Cap rotation values between min and max of -2PI and 2PI

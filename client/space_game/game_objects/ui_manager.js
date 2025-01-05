@@ -3,7 +3,7 @@ export default {
     flags: ["ALWAYS_UPDATE", "ALWAYS_RENDER", "IS_UI"],
     render_layer: 1000,
     init: (core, self) => {
-        self.elements = [];
+        self.elements = {};
         self.maximum_elements = 10;
 
         // Load font
@@ -28,17 +28,20 @@ export default {
         };
     },
     // Add element to UI manager
-    add_element: (self, element) => {
-        if (self.elements.length < self.maximum_elements) {
-            self.elements.push(element);
-        } else {
-            self.elements.shift();
-            self.elements.push(element);
-        }
+    add_element: (self, element, identifier) => {
+        // if (self.elements.length < self.maximum_elements) {
+        //     self.elements.push(element);
+        // } else {
+        //     self.elements.shift();
+        //     self.elements.push(element);
+        // }
+
+        self.elements[identifier] = element;
     },
     // Update elements based on update func
     update: (core, self, delta) => {
-        self.elements.forEach((element, index) => {
+        Object.keys(self.elements).forEach((element_identifier, index) => {
+            const element = self.elements[element_identifier];
             element.forEach((component) => {
                 if (component.update) {
                     component.update(core, component, delta);
@@ -46,9 +49,23 @@ export default {
             });
         });
     },
+    update_text: (self, identifier, new_text) => {
+        Object.keys(self.elements).forEach((element_identifier, index) => {
+            if (element_identifier == identifier) {
+                const element = self.elements[element_identifier];
+                element.forEach((component) => {
+                    if (component.text) {
+                        component.text = new_text
+                        component.last_changed = Date.now();
+                    }
+                })
+            }
+        })
+    },
     // Render elements based on type
     render: (core, self, context, position) => {
-        self.elements.forEach((element, index) => {
+        Object.keys(self.elements).forEach((element_identifier, index) => {
+            const element = self.elements[element_identifier];
             element.forEach((component) => {
                 switch (component.type) {
                     case "text":
