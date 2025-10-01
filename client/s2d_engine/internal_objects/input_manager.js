@@ -60,6 +60,9 @@ input_manager.init = (core, self) => {
       self.mouse.right_down = false;
     }
   });
+  window.addEventListener("contextmenu", (event) => {
+    self.keymap = {};
+  })
 }
 
 // Loop over all actions and check if the key is down, if it is, call the actions while_key_down function
