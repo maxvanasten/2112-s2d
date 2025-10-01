@@ -48,10 +48,6 @@ export default {
         self.current_ship.fuel = self.current_ship.max_fuel;
         // self.last_switched_ships = 0;
         // self.last_docked_vessel = 0;
-
-            {
-            }
-
     },
     update: (core, self, delta) => {
         // Cap rotation values between min and max of -2PI and 2PI
