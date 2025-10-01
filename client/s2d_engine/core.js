@@ -238,6 +238,10 @@ export class Core {
                     case "keyboard":
                         action_object.key = action.key;
                         action_object.while_key_down = action.while_key_down;
+                        if (action.cooldown) {
+                            action_object.cooldown = true;
+                            action_object.cooldownTimer = 0;
+                        }
                         break;
                     case "mouse":
                         action_object.button = action.button;

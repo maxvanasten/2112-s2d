@@ -66,8 +66,9 @@ input_manager.init = (core, self) => {
 input_manager.update = (core, self, delta) => {
   self.actions.forEach((action) => {
     if (action.type == "keyboard") {
-      if (self.is_key_down(self, action.key)) {
+      if (self.is_key_down(self, action.key) && !action.cooldownTimer) {
         action.while_key_down(core, action.self);
+        if (action.cooldown) action.cooldownTimer = 30;
       }
     }
 
@@ -79,7 +80,10 @@ input_manager.update = (core, self, delta) => {
         action.on_click(core, action.self);
       }
     }
+
+    if (action.cooldownTimer) action.cooldownTimer--;
   })
+
 }
 
 export default input_manager;
