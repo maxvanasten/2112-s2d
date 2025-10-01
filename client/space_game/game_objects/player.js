@@ -53,159 +53,9 @@ export default {
         const quest = quest_manager.generate_quest();
         quest_manager.current_quest = quest;
 
-        const ui = core._get_object_by_identifier("ui_manager");
-
-        // Tooltip ui
-        const tooltip_ui_w = innerWidth / 2;
-        const tooltip_ui_h = innerHeight / 8;
-        const tooltip_ui_x = innerWidth / 2 - tooltip_ui_w / 2;
-        const tooltip_ui_y = innerHeight - tooltip_ui_h - innerHeight / 8;
-
-        const tooltip_ui_background = ui.generate_rectangle(
-            tooltip_ui_x,
-            tooltip_ui_y,
-            tooltip_ui_w,
-            tooltip_ui_h,
-            ui.colors.body,
-            true,
-            ui.colors.border,
-            10
-        );
-
-        const tooltip_ui_text = ui.generate_text(
-            [],
-            innerWidth / 64,
             {
-                x: tooltip_ui_x + tooltip_ui_w / 2,
-                y: tooltip_ui_y + tooltip_ui_h / 2,
-            },
-            "center",
-            ui.colors.text
-        );
-        tooltip_ui_text.display_time = 3500;
-        tooltip_ui_text.last_changed = Date.now();
-        tooltip_ui_text.update = (core, self, delta) => {
-            if (Date.now() - self.last_changed >= self.display_time) {
-                self.text = [];
             }
-        };
 
-        const tooltip_ui = [tooltip_ui_text];
-
-        ui.add_element(ui, tooltip_ui, "tooltip", true);
-
-        // Start player ui
-        const player_location_element = [];
-
-        const ui_x = 0;
-        const ui_y = 0;
-        const ui_width = innerWidth;
-        const ui_height = innerHeight / 16;
-        // Background
-        const bg_component = ui.generate_rectangle(
-            ui_x,
-            ui_y,
-            ui_width,
-            ui_height,
-            "white"
-        );
-        // Text
-        const text_component = ui.generate_text(
-            ["x=0, y=0, fps=0"],
-            innerWidth / 64,
-            {
-                x: ui_x + ui_width / 2,
-                y: ui_y + ui_height / 2 + innerHeight / 64,
-            },
-            "center",
-            "black"
-        );
-        text_component.update = (core, self, delta) => {
-            const player = core._get_object_by_identifier("player");
-            self.text[0] = `x=${Math.floor(
-                player.global_position.x
-            )}, y=${Math.floor(player.global_position.y)}, fps=${Math.floor(
-                core._average_frames_per_second
-            )} Updates=${core._updated_objects_count}, Renders=${
-                core._rendered_objects_count
-            } Velocity=${player.current_ship.velocity
-                .magnitude()
-                .toFixed(2)} Planets=${
-                core._get_object_by_identifier("planet_manager").options
-                    .planet_amount
-            }`;
-        };
-
-        player_location_element.push(bg_component);
-        player_location_element.push(text_component);
-
-        // NOTE: Toggle debug ui
-        // ui.add_element(ui, player_location_element);
-
-        // NOTE: DASHBOARD UI
-        const dashboard_ui = [];
-
-        const dashboard_ui_w = innerWidth / 4;
-        const dashboard_ui_h = innerHeight / 8;
-        const dashboard_ui_x = innerWidth / 64;
-        const dashboard_ui_y = innerHeight - innerHeight / 64 - dashboard_ui_h;
-
-        const dashboard_bg = ui.generate_rectangle(
-            dashboard_ui_x,
-            dashboard_ui_y,
-            dashboard_ui_w,
-            dashboard_ui_h,
-            ui.colors.body,
-            true,
-            ui.colors.border,
-            10
-        );
-        const dashboard_text = ui.generate_text(
-            [`Location: `, `Fuel: `, `Velocity: `],
-            ui.font_sizes.normal,
-            {
-                x: dashboard_ui_x + dashboard_ui_w / 2,
-                y: dashboard_ui_y + dashboard_ui_h / 4,
-            },
-            "center",
-            ui.colors.text
-        );
-        dashboard_text.update = (core, self, delta) => {
-            const player = core._get_object_by_identifier("player");
-            self.text[0] = `Location: ${Math.floor(
-                player.global_position.x
-            )}:${Math.floor(player.global_position.y)}`;
-            self.text[1] = `Fuel: ${Math.floor(player.current_ship.fuel)}/${
-                player.current_ship.max_fuel
-            } L`;
-            self.text[2] = `Velocity: ${Math.floor(
-                player.current_ship.velocity.magnitude()
-            )} U/s`;
-        };
-
-        dashboard_ui.push(dashboard_bg);
-        dashboard_ui.push(dashboard_text);
-        ui.add_element(ui, dashboard_ui, "dashboard", true);
-
-        // NOTE: FPS Counter
-        const fps_element = [];
-        const fps_text = ui.generate_text(
-            ["0"],
-            ui.font_sizes.header,
-            {
-                x: innerWidth - innerWidth / 24,
-                y: innerHeight - innerHeight / 32,
-            },
-            "center",
-            "rgba(255, 100, 100, 0.5)"
-        );
-        fps_text.update = (core, self, delta) => {
-            if (core._average_frames_per_second == Infinity) return;
-            self.text[0] = Math.floor(core._average_frames_per_second);
-        };
-
-        fps_element.push(fps_text);
-        ui.add_element(ui, fps_element, "fps", false);
     },
     update: (core, self, delta) => {
         // Cap rotation values between min and max of -2PI and 2PI
@@ -242,6 +92,12 @@ export default {
             self.global_position.x = map_max.x;
         if (self.global_position.y > map_max.y)
             self.global_position.y = map_max.y;
+
+        // Update UI
+        const ui = core._get_object_by_identifier("ui_manager");
+
+        ui.setInnerHTML(ui, "dashboard_position", `Position: ${Math.round(self.global_position.x)}, ${Math.round(self.global_position.y)}`)
+        ui.setInnerHTML(ui, "dashboard_fuel", `Fuel: ${self.current_ship.fuel.toFixed(2)}`);
     },
 
     actions: [
@@ -293,55 +149,13 @@ export default {
         },
         {
             type: "keyboard",
+            cooldown: true,
             key: " ",
             while_key_down: (core, self) => {
-                // Interact with planet
-            },
-        },
-        // {
-        //     type: "keyboard",
-        //     key: "e",
-        //     while_key_down: (core, self) => {
-        //         if (Date.now() - self.last_switched_ships < 1000) return;
-        //         if (self.current_ship.velocity.magnitude() > 50) return;
-        //         self.last_switched_ships = Date.now();
-        //         if (
-        //             self.current_ship ==
-        //             core._get_object_by_identifier("mothership")
-        //         ) {
-        //             self.current_ship =
-        //                 core._get_object_by_identifier("vessel");
-        //             core._get_object_by_identifier("vessel").active = true;
-        //             core._get_object_by_identifier("mothership").active = false;
-        //         } else {
-        //             self.current_ship =
-        //                 core._get_object_by_identifier("mothership");
-        //             core._get_object_by_identifier("vessel").active = false;
-        //             core._get_object_by_identifier("mothership").active = true;
-        //         }
+                const ui = core._get_object_by_identifier("ui_manager");
 
-        //         self.global_position = self.current_ship.global_position;
-        //     },
-        // },
-        // // Dock vessel to mothership if close enough
-        // {
-        //     type: "keyboard",
-        //     key: " ",
-        //     while_key_down: (core, self) => {
-        //         if (Date.now() - self.last_docked_vessel < 1000) return;
-        //         if (self.current_ship.identifier == "mothership") return;
-        //         if (
-        //             self.current_ship.global_position.distance(
-        //                 core._get_object_by_identifier("mothership")
-        //             ) < 1000
-        //         ) {
-        //             self.current_ship =
-        //                 core._get_object_by_identifier("mothership");
-        //             core._get_object_by_identifier("vessel").active = false;
-        //             core._get_object_by_identifier("vessel").docked = true;
-        //             core._get_object_by_identifier("mothership").active = true;
-        //         }
-        //     },
-        // },
+                ui.toggleVisibility(ui, "dashboard");
+            },
+        }
     ],
 };
