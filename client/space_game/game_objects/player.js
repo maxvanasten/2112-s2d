@@ -131,7 +131,7 @@ export default {
                     self.current_ship.acceleration.add(
                         direction.scale(
                             -self.current_ship.speed *
-                                self.current_ship.reverse_speed_mult
+                            self.current_ship.reverse_speed_mult
                         )
                     );
             },

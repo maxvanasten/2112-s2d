@@ -448,7 +448,7 @@ export class Core {
      */
     _get_object_by_identifier = (identifier) => {
         // return this._objects.find(
-            // (object) => object.identifier === identifier || null
+        // (object) => object.identifier === identifier || null
         // );
         if (this._objects[identifier]) {
             return this._objects[identifier];

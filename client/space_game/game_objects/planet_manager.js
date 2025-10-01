@@ -55,11 +55,10 @@ export default {
         ];
         let raw_planet_objects = [];
         for (let i = 0; i < self.options.planet_amount; i++) {
-            const name = `${
-                self.planet_names[
-                    Math.floor(Math.random() * self.planet_names.length)
-                ]
-            }-${Math.floor(Math.random() * 1000)}`;
+            const name = `${self.planet_names[
+                Math.floor(Math.random() * self.planet_names.length)
+            ]
+                }-${Math.floor(Math.random() * 1000)}`;
             raw_planet_objects.push(self.generate_planet(self, i, name));
         }
         core._import_objects(raw_planet_objects);
@@ -69,13 +68,13 @@ export default {
             self.options.planet_min_size +
             Math.floor(
                 Math.random() *
-                    (self.options.planet_max_size -
-                        self.options.planet_min_size)
+                (self.options.planet_max_size -
+                    self.options.planet_min_size)
             );
 
         const texture_name =
             self.options.textures[
-                Math.floor(Math.random() * self.options.textures.length)
+            Math.floor(Math.random() * self.options.textures.length)
             ];
 
         return {
@@ -95,15 +94,15 @@ export default {
                     self.options.min_position.x +
                     Math.floor(
                         Math.random() *
-                            (self.options.max_position.x -
-                                self.options.min_position.x)
+                        (self.options.max_position.x -
+                            self.options.min_position.x)
                     ),
                 y:
                     self.options.min_position.y +
                     Math.floor(
                         Math.random() *
-                            (self.options.max_position.y -
-                                self.options.min_position.y)
+                        (self.options.max_position.y -
+                            self.options.min_position.y)
                     ),
             },
             bounding_box: {
@@ -117,13 +116,13 @@ export default {
                 planet.rotation_speed =
                     self.options.min_rotation_speed +
                     Math.random() *
-                        (self.options.max_rotation_speed -
-                            self.options.min_rotation_speed);
+                    (self.options.max_rotation_speed -
+                        self.options.min_rotation_speed);
             },
             update: (core, self, delta) => {
                 self.rotation += self.rotation_speed * delta;
 
-                // Check if player can interact
+                // TODO: Check if player can interact
                 const player = core._get_object_by_identifier("player");
 
                 // TODO: get popup element reference from ui manager
@@ -134,6 +133,7 @@ export default {
                     self.in_range = true;
                     player.planet = self;
                     // NOTE: set data on popup element
+                    // TODO: Make dynamic planet descriptions that involve the utilities the planet has
                 } else {
                     if (!self.in_range) return;
                     self.in_range = false;
@@ -144,6 +144,8 @@ export default {
             render: (core, self, context, position) => {
                 // Draw circle around interactable planet
                 if (!self.in_range) return;
+
+                // console.log("planet.in_range");
 
                 const screen_position = core._global_to_screen(
                     self.global_position
