@@ -49,10 +49,6 @@ export default {
         // self.last_switched_ships = 0;
         // self.last_docked_vessel = 0;
 
-        const quest_manager = core._get_object_by_identifier("quest_manager");
-        const quest = quest_manager.generate_quest();
-        quest_manager.current_quest = quest;
-
             {
             }
 
