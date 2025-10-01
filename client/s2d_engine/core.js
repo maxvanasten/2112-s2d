@@ -4,6 +4,7 @@ import { Vector2D, Vector4D } from "./utils/vectors.js";
 // Internal objects
 import input_manager from "./internal_objects/input_manager.js";
 import tilemap_manager from "./internal_objects/tilemap_manager.js";
+import ui_manager from "./internal_objects/ui_manager.js";
 
 /**
  * @class Core
@@ -96,6 +97,11 @@ export class Core {
                         );
                         tilemap_manager._is_initialized = true;
                         this._objects["tilemap_manager"] = tilemap_manager;
+                        break;
+                    case "ui_manager":
+                        ui_manager.init(this, ui_manager);
+                        ui_manager._is_initialized = true;
+                        this._objects["ui_manager"] = ui_manager;
                         break;
                     default:
                         console.warn(
