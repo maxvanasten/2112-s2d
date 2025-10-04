@@ -90,6 +90,7 @@ export default {
 
         ui.setInnerHTML(ui, "dashboard_position", `Position: ${Math.round(self.global_position.x)}, ${Math.round(self.global_position.y)}`)
         ui.setInnerHTML(ui, "dashboard_fuel", `Fuel: ${self.current_ship.fuel.toFixed(2)}`);
+        ui.setInnerHTML(ui, "dashboard_fps", `FPS: ${Math.floor(core._average_frames_per_second)}`);
     },
 
     actions: [
