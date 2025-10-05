@@ -142,16 +142,23 @@ export default {
 
                 // TODO: Check if player can interact
                 const player = core._get_object_by_identifier("player");
+                const ui = core._get_object_by_identifier("ui_manager");
 
                 // TODO: get popup element reference from ui manager
                 if (
                     player.global_position.distance(self.global_position) <
                     self.size
                 ) {
-                    self.in_range = true;
-                    player.planet = self;
-                    // NOTE: set data on popup element
-                    // TODO: Make dynamic planet descriptions that involve the utilities the planet has
+                    if (!self.in_range) {
+
+                        self.in_range = true;
+                        player.planet = self;
+                        ui.setVisibility(ui, "planet_name_div", "visible");
+                        ui.setInnerHTML(ui, "planet_name", player.planet.name);
+                        // NOTE: set data on popup element
+                        // TODO: Make dynamic planet descriptions that involve the utilities the planet has
+                    }
+
                 } else {
                     if (!self.in_range) return;
                     self.in_range = false;

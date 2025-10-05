@@ -23,6 +23,7 @@ export default {
     },
     scale: 1.5,
     planet: false,
+    landed: false,
     init: (core, self) => {
         self.sprite.render_width = self.sprite.render_width * self.scale;
         self.sprite.render_height = self.sprite.render_height * self.scale;
@@ -64,6 +65,21 @@ export default {
             const ui = core._get_object_by_identifier("ui_manager");
             ui.toggleVisibility(ui, "dashboard_main");
         };
+        ui.getElement("access_planet_button").onclick = () => {
+            self.landed = true;
+            self.current_ship.thrust = 0;
+            const ui = core._get_object_by_identifier("ui_manager");
+            ui.setVisibility(ui, "planet_name_div", "hidden");
+            ui.setVisibility(ui, "planet_menu_div", "visible");
+            ui.setInnerHTML(ui, "planet_menu_name", self.planet.name);
+            ui.setInnerHTML(ui, "planet_resources", self.planet.get_resource_string(self.planet));
+        }
+        ui.getElement("planet_menu_leave_button").onclick = () => {
+            self.landed = false;
+            const ui = core._get_object_by_identifier("ui_manager");
+            ui.setVisibility(ui, "planet_name_div", "visible");
+            ui.setVisibility(ui, "planet_menu_div", "hidden");
+        }
     },
     update: (core, self, delta) => {
         // Cap rotation values between min and max of -2PI and 2PI
@@ -131,6 +147,11 @@ export default {
         ui.setInnerHTML(ui, "dashboard_thrust", `${self.current_ship.thrust.toFixed(2)}`);
         ui.getElement("progress_fuel").value = self.current_ship.fuel;
         ui.setInnerHTML(ui, "dashboard_fuel", `${self.current_ship.fuel.toFixed(0)} <span class="small">(-${self.current_ship.fuelUsageNow.toFixed(4)})</span>`)
+
+        if (!self.planet) {
+            ui.setVisibility(ui, "planet_name_div", "hidden");
+            ui.setInnerHTML(ui, "planet_name", " ");
+        }
     },
 
     actions: [
@@ -138,6 +159,7 @@ export default {
             type: "keyboard",
             key: "w",
             while_key_down: (core, self) => {
+                if (self.landed) return;
                 // Increase thrust
                 self.current_ship.thrust += self.current_ship.thrustDelta;
                 // Constrain thrust between 0 and 1
@@ -149,6 +171,7 @@ export default {
             type: "keyboard",
             key: "d",
             while_key_down: (core, self) => {
+                if (self.landed) return;
                 self.current_ship.rotation += self.current_ship.base_turn_speed;
             },
         },
@@ -156,6 +179,7 @@ export default {
             type: "keyboard",
             key: "s",
             while_key_down: (core, self) => {
+                if (self.landed) return;
                 // Decrease thrust
                 self.current_ship.thrust -= self.current_ship.thrustDelta * 2;
                 // Constrain thrust between 0 and 1
@@ -167,6 +191,7 @@ export default {
             type: "keyboard",
             key: "a",
             while_key_down: (core, self) => {
+                if (self.landed) return;
                 self.current_ship.rotation -= self.current_ship.base_turn_speed;
             },
         },

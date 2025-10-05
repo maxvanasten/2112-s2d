@@ -54,6 +54,33 @@
             margin: 30px;
         }
 
+        #planet_name_div {
+            position: fixed;
+            justify-self: center;
+            bottom: 5%;
+            color: #cccccc;
+            visibility: hidden;
+        }
+
+        #planet_menu_div {
+            visibility: hidden;
+            position: fixed;
+            bottom: 20px;
+            justify-self: center;
+            border-radius: 10%;
+            width: 60%;
+            height: 80%;
+            background-color: #222222;
+            opacity: 70%;
+            color: #ffffff;
+        }
+
+        #planet_menu_leave_button {
+            margin: 5%;
+            position: fixed;
+            bottom: 10px;
+        }
+
         #debug {
             background-color: green;
             visibility: hidden;
@@ -109,6 +136,37 @@
                 <center>Thrust: <span id="dashboard_thrust"> </span>/1.00</center>
             </div>
 
+        </div>
+
+        <div id="planet_name_div">
+            <p
+                id="planet_name"
+                class="display-3"
+            >PLANETNAME</p>
+            <button
+                id="access_planet_button"
+                class="btn btn-primary w-100"
+            >Land</button>
+        </div>
+
+        <div
+            id="planet_menu_div"
+            class="p-5"
+        >
+            <p
+                id="planet_menu_name"
+                class="display-4"
+            > </p>
+
+            <p
+                class="lead"
+                id="planet_resources"
+            > </p>
+
+            <button
+                class="btn btn-primary"
+                id="planet_menu_leave_button"
+            >Leave</button>
         </div>
 
     </div>
