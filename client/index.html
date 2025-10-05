@@ -7,6 +7,13 @@
         name="viewport"
         content="width=device-width, initial-scale=1.0"
     >
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/lumen/bootstrap.min.css"
+        integrity="sha384-GzaBcW6yPIfhF+6VpKMjxbTx6tvR/yRd/yJub90CqoIn2Tz4rRXlSpTFYMKHCifX"
+        crossorigin="anonymous"
+    >
+
     <title>2112-s2d</title>
 
     <style>
@@ -26,10 +33,30 @@
             height: 100%;
         }
 
+        #dashboard {}
+
+        #dashboard_main {
+            background-color: #000000;
+            opacity: 80%;
+            visibility: hidden;
+            position: fixed;
+            top: 5%;
+            justify-self: center;
+            color: white;
+            width: fit-content;
+            padding: 25px;
+            border-radius: 15%;
+        }
+
+        #dashboard_toggle {
+            position: fixed;
+            top: 0;
+            margin: 30px;
+        }
+
         #debug {
             background-color: green;
-            visibility: visible;
-            margin: 20px;
+            visibility: hidden;
         }
     </style>
 </head>
@@ -51,12 +78,37 @@
                 id="debug_fps"
                 class="lead"
             >
-
             </p>
             <p
                 id="debug_thrust"
                 class="lead"
             > </p>
+        </div>
+
+        <div id="dashboard">
+            <div id="dashboard_toggle">
+                <button
+                    id="dashboard_toggle_button"
+                    class="btn btn-primary"
+                >Ship Information</button>
+            </div>
+            <div id="dashboard_main">
+
+                <center>Location: <span id="dashboard_coordinates"> </span></center>
+                <progress
+                    id="progress_fuel"
+                    value="1000"
+                    max="1000"
+                ></progress>
+                <center>Fuel: <span id="dashboard_fuel"> </span></center>
+                <progress
+                    id="progress_thrust"
+                    value="0"
+                    max="1"
+                ></progress>
+                <center>Thrust: <span id="dashboard_thrust"> </span>/1.00</center>
+            </div>
+
         </div>
 
     </div>

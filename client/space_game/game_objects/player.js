@@ -41,6 +41,7 @@ export default {
                 acceleration: Vector2D.from_x_and_y(0, 0),
                 velocity: Vector2D.from_x_and_y(0, 0),
                 rotation: 0,
+                angle: 0,
                 speed: 10,
                 base_turn_speed: 0.015,
                 speed_decay: 0.98,
@@ -50,13 +51,19 @@ export default {
                 fuel_usage: 0.01,
                 fuelUsageNow: 0,
                 thrust: 0.0,
-                thrustDelta: 0.005,
+                thrustDelta: 0.001,
             },
         };
         self.current_ship = self.ships.mothership;
         self.current_ship.fuel = self.current_ship.max_fuel;
         // self.last_switched_ships = 0;
         // self.last_docked_vessel = 0;
+
+        const ui = core._get_object_by_identifier("ui_manager");
+        ui.getElement("dashboard_toggle_button").onclick = () => {
+            const ui = core._get_object_by_identifier("ui_manager");
+            ui.toggleVisibility(ui, "dashboard_main");
+        };
     },
     update: (core, self, delta) => {
         // Cap rotation values between min and max of -2PI and 2PI
@@ -93,11 +100,12 @@ export default {
         } else {
             self.current_ship.fuelUsageNow = 0;
         }
-        const direction = Vector2D.from_angle(
+        self.current_ship.direction = Vector2D.from_angle(
             self.current_ship.rotation
         );
+
         self.current_ship.acceleration =
-            self.current_ship.acceleration.add(direction.scale(speed));
+            self.current_ship.acceleration.add(self.current_ship.direction.scale(speed));
 
         // Constrain position to map size
         const map_max =
@@ -117,6 +125,12 @@ export default {
         ui.setInnerHTML(ui, "debug_fuel", `Fuel: ${self.current_ship.fuel.toFixed(2)} (${self.current_ship.fuelUsageNow.toFixed(6)})`);
         ui.setInnerHTML(ui, "debug_fps", `FPS: ${Math.floor(core._average_frames_per_second)}`);
         ui.setInnerHTML(ui, "debug_thrust", `Thrust %: ${self.current_ship.thrust.toFixed(2)}`);
+
+        ui.getElement("progress_thrust").value = self.current_ship.thrust;
+        ui.setInnerHTML(ui, "dashboard_coordinates", `${Math.round(self.global_position.x)}:${Math.round(self.global_position.y)}`)
+        ui.setInnerHTML(ui, "dashboard_thrust", `${self.current_ship.thrust.toFixed(2)}`);
+        ui.getElement("progress_fuel").value = self.current_ship.fuel;
+        ui.setInnerHTML(ui, "dashboard_fuel", `${self.current_ship.fuel.toFixed(0)} <span class="small">(-${self.current_ship.fuelUsageNow.toFixed(4)})</span>`)
     },
 
     actions: [
@@ -143,7 +157,7 @@ export default {
             key: "s",
             while_key_down: (core, self) => {
                 // Decrease thrust
-                self.current_ship.thrust -= self.current_ship.thrustDelta;
+                self.current_ship.thrust -= self.current_ship.thrustDelta * 2;
                 // Constrain thrust between 0 and 1
                 if (self.current_ship.thrust < 0) self.current_ship.thrust = 0;
                 if (self.current_ship.thrust > 1) self.current_ship.thrust = 1;
