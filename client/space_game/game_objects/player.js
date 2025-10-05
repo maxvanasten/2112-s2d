@@ -48,6 +48,9 @@ export default {
                 max_fuel: 1000,
                 fuel: 0,
                 fuel_usage: 0.01,
+                fuelUsageNow: 0,
+                thrust: 0.0,
+                thrustDelta: 0.005,
             },
         };
         self.current_ship = self.ships.mothership;
@@ -80,6 +83,22 @@ export default {
             self.current_ship.speed_decay
         );
 
+        // MOVEMENT
+        const speed = self.current_ship.speed * self.current_ship.thrust;
+        if (!self.current_ship.fuel)
+            speed = self.current_ship.speed * 0.2;
+        if (self.current_ship.thrust) {
+            self.current_ship.fuelUsageNow = (self.current_ship.fuel_usage * 0.1) + ((self.current_ship.fuel_usage * 0.9) * self.current_ship.thrust)
+            self.current_ship.fuel -= self.current_ship.fuelUsageNow;
+        } else {
+            self.current_ship.fuelUsageNow = 0;
+        }
+        const direction = Vector2D.from_angle(
+            self.current_ship.rotation
+        );
+        self.current_ship.acceleration =
+            self.current_ship.acceleration.add(direction.scale(speed));
+
         // Constrain position to map size
         const map_max =
             core._get_object_by_identifier("planet_manager").options
@@ -97,6 +116,8 @@ export default {
         ui.setInnerHTML(ui, "dashboard_position", `Position: ${Math.round(self.global_position.x)}, ${Math.round(self.global_position.y)}`)
         ui.setInnerHTML(ui, "dashboard_fuel", `Fuel: ${self.current_ship.fuel.toFixed(2)}`);
         ui.setInnerHTML(ui, "dashboard_fps", `FPS: ${Math.floor(core._average_frames_per_second)}`);
+        ui.setInnerHTML(ui, "debug_fuel", `Fuel: ${self.current_ship.fuel.toFixed(2)} (${self.current_ship.fuelUsageNow.toFixed(6)})`);
+        ui.setInnerHTML(ui, "debug_thrust", `Thrust %: ${self.current_ship.thrust.toFixed(2)}`);
     },
 
     actions: [
@@ -104,16 +125,11 @@ export default {
             type: "keyboard",
             key: "w",
             while_key_down: (core, self) => {
-                // If fuel
-                const speed = self.current_ship.speed;
-                if (!self.current_ship.fuel)
-                    speed = self.current_ship.speed * 0.2;
-                self.current_ship.fuel -= self.current_ship.fuel_usage;
-                const direction = Vector2D.from_angle(
-                    self.current_ship.rotation
-                );
-                self.current_ship.acceleration =
-                    self.current_ship.acceleration.add(direction.scale(speed));
+                // Increase thrust
+                self.current_ship.thrust += self.current_ship.thrustDelta;
+                // Constrain thrust between 0 and 1
+                if (self.current_ship.thrust < 0) self.current_ship.thrust = 0;
+                if (self.current_ship.thrust > 1) self.current_ship.thrust = 1;
             },
         },
         {
@@ -127,16 +143,11 @@ export default {
             type: "keyboard",
             key: "s",
             while_key_down: (core, self) => {
-                const direction = Vector2D.from_angle(
-                    self.current_ship.rotation
-                );
-                self.current_ship.acceleration =
-                    self.current_ship.acceleration.add(
-                        direction.scale(
-                            -self.current_ship.speed *
-                            self.current_ship.reverse_speed_mult
-                        )
-                    );
+                // Decrease thrust
+                self.current_ship.thrust -= self.current_ship.thrustDelta;
+                // Constrain thrust between 0 and 1
+                if (self.current_ship.thrust < 0) self.current_ship.thrust = 0;
+                if (self.current_ship.thrust > 1) self.current_ship.thrust = 1;
             },
         },
         {
