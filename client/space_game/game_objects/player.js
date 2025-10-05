@@ -7,8 +7,8 @@ export default {
         image_path: "space_game/assets/textures/big_ship_0.png",
         source_width: 180,
         source_height: 169,
-        render_width: 80,
-        render_height: 65,
+        render_width: 40,
+        render_height: 30,
     },
     render_layer: 3,
     global_position: {
@@ -18,11 +18,17 @@ export default {
     bounding_box: {
         x: 0,
         y: 0,
-        width: 100,
-        height: 90,
+        width: 40,
+        height: 30,
     },
+    scale: 1.5,
     planet: false,
     init: (core, self) => {
+        self.sprite.render_width = self.sprite.render_width * self.scale;
+        self.sprite.render_height = self.sprite.render_height * self.scale;
+        self.bounding_box.width = self.bounding_box.width * self.scale;
+        self.bounding_box.height = self.bounding_box.height * self.scale;
+
         self.global_position.x =
             core._get_object_by_identifier("planet_manager").options
                 .max_position.x / 2;
