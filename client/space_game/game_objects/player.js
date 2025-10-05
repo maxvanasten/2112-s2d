@@ -139,7 +139,7 @@ export default {
 
         ui.setInnerHTML(ui, "debug_position", `Position: ${Math.round(self.global_position.x)}, ${Math.round(self.global_position.y)}`)
         ui.setInnerHTML(ui, "debug_fuel", `Fuel: ${self.current_ship.fuel.toFixed(2)} (${self.current_ship.fuelUsageNow.toFixed(6)})`);
-        ui.setInnerHTML(ui, "debug_fps", `FPS: ${Math.floor(core._average_frames_per_second)}`);
+        ui.setInnerHTML(ui, "debug_fps", `${Math.floor(core._average_frames_per_second)}`);
         ui.setInnerHTML(ui, "debug_thrust", `Thrust %: ${self.current_ship.thrust.toFixed(2)}`);
 
         ui.getElement("progress_thrust").value = self.current_ship.thrust;
