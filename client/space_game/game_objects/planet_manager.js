@@ -1,5 +1,7 @@
 import { Vector2D } from "../../s2d_engine/utils/vectors.js";
 
+
+
 export default {
     identifier: "planet_manager",
     flags: ["ALWAYS_UPDATE"],
@@ -28,7 +30,6 @@ export default {
             "Solara",
             "Borealis",
             "Vespera",
-            "Erythra",
             "Lythos",
             "Cendara",
             "Orona",
@@ -59,11 +60,13 @@ export default {
                 Math.floor(Math.random() * self.planet_names.length)
             ]
                 }-${Math.floor(Math.random() * 1000)}`;
-            raw_planet_objects.push(self.generate_planet(self, i, name));
+            raw_planet_objects.push(self.generate_planet(core, self, i, name));
         }
         core._import_objects(raw_planet_objects);
     },
-    generate_planet: (self, index, name) => {
+    generate_planet: (core, self, index, name) => {
+        const item_manager = core._get_object_by_identifier("item_manager");
+
         const size =
             self.options.planet_min_size +
             Math.floor(
@@ -110,6 +113,21 @@ export default {
                 y: 0,
                 width: size,
                 height: size,
+            },
+            resources: item_manager.generate_planet_resources(item_manager, "fuel_planet"),
+            get_resource_string: (self) => {
+                let str = "";
+
+                self.resources.forEach((resource) => {
+                    let buy_price = "Not buying";
+                    let sell_price = "Not selling"
+                    if (resource.buy_price) buy_price = resource.buy_price;
+                    if (resource.sell_price) sell_price = resource.sell_price;
+
+                    str += `${resource.name} (${resource.id}) <button class="btn btn-success">Buy</button> ${buy_price}${resource.unit}, <button class="btn btn-danger">Sell</button> ${sell_price}${resource.unit} [${resource.amount} ${resource.unit_name}]\n`
+                })
+
+                return str;
             },
             init: (core, planet) => {
                 planet.rotation = 0;
