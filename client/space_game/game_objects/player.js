@@ -113,10 +113,9 @@ export default {
         // Update UI
         const ui = core._get_object_by_identifier("ui_manager");
 
-        ui.setInnerHTML(ui, "dashboard_position", `Position: ${Math.round(self.global_position.x)}, ${Math.round(self.global_position.y)}`)
-        ui.setInnerHTML(ui, "dashboard_fuel", `Fuel: ${self.current_ship.fuel.toFixed(2)}`);
-        ui.setInnerHTML(ui, "dashboard_fps", `FPS: ${Math.floor(core._average_frames_per_second)}`);
+        ui.setInnerHTML(ui, "debug_position", `Position: ${Math.round(self.global_position.x)}, ${Math.round(self.global_position.y)}`)
         ui.setInnerHTML(ui, "debug_fuel", `Fuel: ${self.current_ship.fuel.toFixed(2)} (${self.current_ship.fuelUsageNow.toFixed(6)})`);
+        ui.setInnerHTML(ui, "debug_fps", `FPS: ${Math.floor(core._average_frames_per_second)}`);
         ui.setInnerHTML(ui, "debug_thrust", `Thrust %: ${self.current_ship.thrust.toFixed(2)}`);
     },
 
@@ -164,7 +163,7 @@ export default {
             while_key_down: (core, self) => {
                 const ui = core._get_object_by_identifier("ui_manager");
 
-                ui.toggleVisibility(ui, "dashboard");
+                ui.toggleVisibility(ui, "debug");
             },
         }
     ],
