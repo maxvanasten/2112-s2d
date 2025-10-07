@@ -42,6 +42,7 @@ export default {
                 acceleration: Vector2D.from_x_and_y(0, 0),
                 velocity: Vector2D.from_x_and_y(0, 0),
                 rotation: 0,
+                rotation_vector: 0,
                 angle: 0,
                 speed: 10,
                 base_turn_speed: 0.015,
@@ -80,6 +81,31 @@ export default {
             ui.setVisibility(ui, "planet_name_div", "visible");
             ui.setVisibility(ui, "planet_menu_div", "hidden");
         }
+
+        ui.getElement("controls_thrust_0").onclick = () => {
+            self.current_ship.thrust = 0;
+        }
+        ui.getElement("controls_thrust_33").onclick = () => {
+            self.current_ship.thrust = 0.33;
+        }
+        ui.getElement("controls_thrust_67").onclick = () => {
+            self.current_ship.thrust = 0.67;
+        }
+        ui.getElement("controls_thrust_100").onclick = () => {
+            self.current_ship.thrust = 1;
+        }
+        ui.getElement("controls_left").onmousedown = () => {
+            self.current_ship.rotation_vector = -self.current_ship.base_turn_speed;
+        }
+        ui.getElement("controls_left").onmouseup = () => {
+            self.current_ship.rotation_vector = 0;
+        }
+        ui.getElement("controls_right").onmousedown = () => {
+            self.current_ship.rotation_vector = self.current_ship.base_turn_speed;
+        }
+        ui.getElement("controls_right").onmouseup = () => {
+            self.current_ship.rotation_vector = 0;
+        }
     },
     update: (core, self, delta) => {
         // Cap rotation values between min and max of -2PI and 2PI
@@ -105,6 +131,9 @@ export default {
         self.current_ship.velocity = self.current_ship.velocity.scale(
             self.current_ship.speed_decay
         );
+
+        // Add rotation vector
+        self.current_ship.rotation += self.current_ship.rotation_vector;
 
         // MOVEMENT
         const speed = self.current_ship.speed * self.current_ship.thrust;

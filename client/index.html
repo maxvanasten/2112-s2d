@@ -107,23 +107,49 @@
                 <button
                     id="dashboard_toggle_button"
                     class="btn btn-primary"
-                >Ship Information</button>
+                >Ship Controls</button>
             </div>
             <div id="dashboard_main">
 
-                <center>Location: <span id="dashboard_coordinates"> </span></center>
-                <progress
-                    id="progress_fuel"
-                    value="1000"
-                    max="1000"
-                ></progress>
-                <center>Fuel: <span id="dashboard_fuel"> </span></center>
-                <progress
-                    id="progress_thrust"
-                    value="0"
-                    max="1"
-                ></progress>
-                <center>Thrust: <span id="dashboard_thrust"> </span>/1.00</center>
+                <center>Location: <span id="dashboard_coordinates"> </span><br>
+                    <progress
+                        id="progress_fuel"
+                        value="1000"
+                        max="1000"
+                    ></progress><br>
+                    Fuel: <span id="dashboard_fuel"> </span><br>
+                    <progress
+                        id="progress_thrust"
+                        value="0"
+                        max="1"
+                    ></progress><br>
+                    Thrust: <span id="dashboard_thrust"> </span>/1.00<br>
+                    <button
+                        id="controls_thrust_0"
+                        class="btn btn-secondary"
+                    >0%</button>
+                    <button
+                        id="controls_thrust_33"
+                        class="btn btn-secondary"
+                    >33%</button>
+                    <button
+                        id="controls_thrust_67"
+                        class="btn btn-secondary"
+                    >67%</button>
+                    <button
+                        id="controls_thrust_100"
+                        class="btn btn-secondary"
+                    >100%</button>
+                    <br>
+                    <button
+                        id="controls_left"
+                        class="btn btn-secondary"
+                    >Left</button>
+                    <button
+                        id="controls_right"
+                        class="btn btn-secondary"
+                    >Right</button>
+                </center>
             </div>
 
         </div>
