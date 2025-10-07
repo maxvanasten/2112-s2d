@@ -36,27 +36,24 @@ export default {
         self.global_position.y =
             core._get_object_by_identifier("planet_manager").options
                 .max_position.y / 2;
-        self.ships = {
-            mothership: {
-                position: Vector2D.from_x_and_y(0, 0),
-                acceleration: Vector2D.from_x_and_y(0, 0),
-                velocity: Vector2D.from_x_and_y(0, 0),
-                rotation: 0,
-                rotation_vector: 0,
-                angle: 0,
-                speed: 10,
-                base_turn_speed: 0.015,
-                speed_decay: 0.98,
-                reverse_speed_mult: 0.5,
-                max_fuel: 1000,
-                fuel: 0,
-                fuel_usage: 0.01,
-                fuelUsageNow: 0,
-                thrust: 0.0,
-                thrustDelta: 0.001,
-            },
+        self.current_ship = {
+            position: Vector2D.from_x_and_y(0, 0),
+            acceleration: Vector2D.from_x_and_y(0, 0),
+            velocity: Vector2D.from_x_and_y(0, 0),
+            rotation: 0,
+            rotation_vector: 0,
+            angle: 0,
+            speed: 10,
+            base_turn_speed: 0.015,
+            speed_decay: 0.98,
+            reverse_speed_mult: 0.5,
+            max_fuel: 1000,
+            fuel: 0,
+            fuel_usage: 0.01,
+            fuelUsageNow: 0,
+            thrust: 0.0,
+            thrustDelta: 0.001,
         };
-        self.current_ship = self.ships.mothership;
         self.current_ship.fuel = self.current_ship.max_fuel;
         // self.last_switched_ships = 0;
         // self.last_docked_vessel = 0;
