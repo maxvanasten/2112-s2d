@@ -97,13 +97,25 @@ export default {
         ui.getElement("controls_left").onmousedown = () => {
             self.current_ship.rotation_vector = -self.current_ship.base_turn_speed;
         }
+        ui.getElement("controls_left").ontouchstart = () => {
+            self.current_ship.rotation_vector = -self.current_ship.base_turn_speed;
+        }
         ui.getElement("controls_left").onmouseup = () => {
+            self.current_ship.rotation_vector = 0;
+        }
+        ui.getElement("controls_left").ontouchend = () => {
             self.current_ship.rotation_vector = 0;
         }
         ui.getElement("controls_right").onmousedown = () => {
             self.current_ship.rotation_vector = self.current_ship.base_turn_speed;
         }
+        ui.getElement("controls_right").ontouchstart = () => {
+            self.current_ship.rotation_vector = self.current_ship.base_turn_speed;
+        }
         ui.getElement("controls_right").onmouseup = () => {
+            self.current_ship.rotation_vector = 0;
+        }
+        ui.getElement("controls_right").ontouchend = () => {
             self.current_ship.rotation_vector = 0;
         }
     },
