@@ -94,30 +94,22 @@ export default {
         ui.getElement("controls_thrust_100").onclick = () => {
             self.current_ship.thrust = 1;
         }
-        ui.getElement("controls_left").onmousedown = () => {
+        ui.getElement("controls_left").onpointerdown = () => {
             self.current_ship.rotation_vector = -self.current_ship.base_turn_speed;
         }
-        ui.getElement("controls_left").ontouchstart = () => {
-            self.current_ship.rotation_vector = -self.current_ship.base_turn_speed;
-        }
-        ui.getElement("controls_left").onmouseup = () => {
+
+        ui.getElement("controls_left").onpointerup = () => {
             self.current_ship.rotation_vector = 0;
         }
-        ui.getElement("controls_left").ontouchend = () => {
-            self.current_ship.rotation_vector = 0;
-        }
-        ui.getElement("controls_right").onmousedown = () => {
+
+        ui.getElement("controls_right").onpointerdown = () => {
             self.current_ship.rotation_vector = self.current_ship.base_turn_speed;
         }
-        ui.getElement("controls_right").ontouchstart = () => {
-            self.current_ship.rotation_vector = self.current_ship.base_turn_speed;
-        }
-        ui.getElement("controls_right").onmouseup = () => {
+
+        ui.getElement("controls_right").onpointerup = () => {
             self.current_ship.rotation_vector = 0;
         }
-        ui.getElement("controls_right").ontouchend = () => {
-            self.current_ship.rotation_vector = 0;
-        }
+
     },
     update: (core, self, delta) => {
         // Cap rotation values between min and max of -2PI and 2PI
