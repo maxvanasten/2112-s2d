@@ -46,7 +46,9 @@
             background-color: #000000;
             opacity: 80%;
             visibility: hidden;
-            top: 5%;
+            position: fixed;
+            justify-self: center;
+            bottom: 5%;
             color: white;
             width: fit-content;
             padding: 25px;
@@ -62,7 +64,7 @@
         #planet_name_div {
             position: fixed;
             justify-self: center;
-            bottom: 5%;
+            top: 5%;
             color: #cccccc;
             visibility: hidden;
         }
@@ -70,19 +72,14 @@
         #planet_menu_div {
             visibility: hidden;
             position: fixed;
-            bottom: 20px;
+            /* bottom: 20px; */
             justify-self: center;
-            width: 90%;
-            height: 90%;
+            width: auto;
+            height: auto;
+            margin: 10%;
             background-color: #222222;
             opacity: 90%;
             color: #ffffff;
-        }
-
-        #planet_menu_leave_button {
-            margin: 5%;
-            position: fixed;
-            bottom: 10px;
         }
 
         #debug {
