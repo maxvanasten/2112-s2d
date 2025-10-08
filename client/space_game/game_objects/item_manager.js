@@ -8,11 +8,11 @@ export default {
             name: "Fuel",
             min_price: 2,
             max_price: 200,
-            unit: "/L",
-            unit_name: "Liters"
+            unit_short: "L",
+            unit_full: "Liters"
         }
     ],
-    get_item: (self, identifier) => {
+    get_item_ref: (self, identifier) => {
         let found_item = false;
         self.items.forEach((item) => {
             if (item.id == identifier) found_item = item;
@@ -26,21 +26,30 @@ export default {
         })
         return price;
     },
+    get_item: (self, item_identifier) => {
+        const item_ref = self.get_item_ref(self, item_identifier);
+
+        return {
+            id: item_ref.id,
+            name: item_ref.name,
+            unit_short: item_ref.unit_short,
+            unit_full: item_ref.unit_full,
+            buy_price: 0,
+            sell_price: 0,
+            amount: 0,
+        }
+    },
     generate_planet_resources: (self, planet_type) => {
         const resources = [];
         if (planet_type == "fuel_planet") {
             // Buy and sell fuel
-            const fuel_item_ref = self.get_item(self, "fuel");
-            const base_price = self.generate_item_price(self, fuel_item_ref.id);
-            const fuel_item = {
-                id: fuel_item_ref.id,
-                name: fuel_item_ref.name,
-                unit: fuel_item_ref.unit,
-                unit_name: fuel_item_ref.unit_name,
-                buy_price: (base_price * 1.2).toFixed(2),
-                sell_price: (base_price * 0.8).toFixed(2),
-                amount: Math.floor(Math.random() * 1250000)
-            }
+            const fuel_item = self.get_item(self, "fuel");
+            const base_price = self.generate_item_price(self, fuel_item.id);
+
+            fuel_item.buy_price = (base_price * 1.2).toFixed(2);
+            fuel_item.sell_price = (base_price * 0.8).toFixed(2);
+            fuel_item.amount = Math.floor(Math.random() * 125000);
+
             resources.push(fuel_item);
         } else if (planet_type == "mining_planet") {
             // Buy ores
