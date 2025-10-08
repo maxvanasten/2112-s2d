@@ -48,13 +48,12 @@ export default {
             speed_decay: 0.98,
             reverse_speed_mult: 0.5,
             max_fuel: 1000,
-            fuel: 0,
+            fuel: 1000,
             fuel_usage: 0.01,
             fuelUsageNow: 0,
             thrust: 0.0,
             thrustDelta: 0.001,
         };
-        self.current_ship.fuel = self.current_ship.max_fuel;
         // self.last_switched_ships = 0;
         // self.last_docked_vessel = 0;
 
