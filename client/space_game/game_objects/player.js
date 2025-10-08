@@ -52,7 +52,7 @@ export default {
             fuel_usage: 0.01,
             fuelUsageNow: 0,
             thrust: 0.0,
-            thrustDelta: 0.001,
+            thrustDelta: 0.005,
         };
         // self.last_switched_ships = 0;
         // self.last_docked_vessel = 0;
