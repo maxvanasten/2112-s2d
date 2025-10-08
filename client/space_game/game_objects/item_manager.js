@@ -59,6 +59,51 @@ export default {
 
         return resources;
     },
+    // An inventory is simply an array of itemstacks, an itemstack only holds the identifier and the amount of items
+    add_to_inventory: (self, inventory, item_identifier, amount) => {
+        // Check validity of item
+        let result = false;
+        self.items.forEach((item) => {
+            if (item.id == item_identifier) result = item;
+        })
+        if (!result) return false;
+
+        // Check if item exists already in inventory
+        result = false;
+        inventory.forEach((item) => {
+            if (item.id == item_identifier) {
+                // Add item to existing itemstack
+                item.amount += amount;
+                result = true;
+            }
+        })
+
+        // Add new itemstack to inventory
+        if (!result) {
+            let itemstack = self.get_item(self, item_identifier);
+            itemstack.amount = amount;
+            inventory.push(itemstack)
+        }
+    },
+    take_from_inventory: (self, inventory, item_identifier, amount) => {
+        // Check validity of item
+        let result = false;
+        self.items.forEach((item) => {
+            if (item.id == item_identifier) result = item;
+        })
+        if (!result) return false;
+
+        // Check if item exists
+        let itemstack = false;
+        inventory.forEach((item) => {
+            if (item.id == item_identifier) itemstack = item;
+        })
+        if (!itemstack) return false;
+        if (itemstack.amount < amount) return false;
+        if (itemstack.amount > amount) itemstack.amount -= amount;
+        if (itemstack.amount == amount) inventory.splice(inventory.indexOf(itemstack), 1);
+        return true;
+    },
     init: (core, self) => {
 
     },
