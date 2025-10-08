@@ -70,7 +70,7 @@ export default {
             ui.setVisibility(ui, "planet_name_div", "hidden");
             ui.setVisibility(ui, "planet_menu_div", "visible");
             ui.setInnerHTML(ui, "planet_menu_name", self.planet.name);
-            ui.setInnerHTML(ui, "planet_resources", self.planet.get_resource_string(self.planet));
+            ui.setInnerHTML(ui, "planet_menu_table", self.planet.get_resource_table(self.planet));
         }
         ui.getElement("planet_menu_leave_button").onclick = () => {
             self.landed = false;

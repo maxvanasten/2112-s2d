@@ -125,6 +125,36 @@ export default {
                     if (resource.sell_price) sell_price = resource.sell_price;
 
                     str += `${resource.name} (${resource.id}) <button class="btn btn-success">Buy</button> ${buy_price}${resource.unit}, <button class="btn btn-danger">Sell</button> ${sell_price}${resource.unit} [${resource.amount} ${resource.unit_name}]\n`
+
+
+
+                })
+
+                return str;
+            },
+            get_resource_table: (self) => {
+                let str = `<thead>
+                    <tr>
+                        <th scope="col">
+                            <center>Item Name</center>
+                        </th>
+                        <th scope="col">
+                            <center>Buy</center>
+                        </th>
+                        <th scope="col">
+                            <center>Sell</center>
+                        </th>
+                        <th scope="col">
+                            <center>Storage</center>
+                        </th>
+                    </tr>
+                </thead><tr>`;
+
+                self.resources.forEach((resource) => {
+                    str += `<th scope="row">${resource.name}</td>`;
+                    str += `<td><button class="btn btn-primary m-2">${resource.buy_price}</button></td>`;
+                    str += `<td><button class="btn btn-danger m-2">${resource.sell_price}</button></td>`;
+                    str += `<td>${resource.amount} ${resource.unit_short}</td></tr>`;
                 })
 
                 return str;
