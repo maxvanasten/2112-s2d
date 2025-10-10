@@ -183,8 +183,11 @@ export default {
 
                         self.in_range = true;
                         player.planet = self;
-                        ui.setVisibility(ui, "planet_name_div", "visible");
+                        if (ui._get_visibility(ui, "inventory") != "visible") {
+                            ui.setVisibility(ui, "planet_name_div", "visible");
+                        }
                         ui.setInnerHTML(ui, "planet_name", player.planet.name);
+
                         // NOTE: set data on popup element
                         // TODO: Make dynamic planet descriptions that involve the utilities the planet has
                     }

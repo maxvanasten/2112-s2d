@@ -59,7 +59,7 @@
             border-radius: 15%;
         }
 
-        #dashboard_toggle {
+        #dashboard_button_panel {
             position: fixed;
             top: 0;
             margin: 30px;
@@ -76,11 +76,10 @@
         #planet_menu_div {
             visibility: hidden;
             position: fixed;
-            /* bottom: 20px; */
             justify-self: center;
-            width: auto;
-            height: auto;
-            margin: 10%;
+            top: 0;
+            width: 60%;
+            height: 100%;
             background-color: #222222;
             opacity: 90%;
             color: #ffffff;
@@ -88,6 +87,11 @@
 
         #planet_menu_table {
             color: white;
+        }
+
+        .exit_button {
+            position: fixed;
+            bottom: 2%;
         }
 
         #debug {
@@ -103,12 +107,38 @@
             left: 0;
             color: white;
         }
+
+        #inventory {
+            justify-self: center;
+            background-color: #222222;
+            opacity: 90%;
+            width: 60%;
+            height: 100%;
+            visibility: hidden;
+            color: #cccccc;
+        }
+
+        #inventory_table {
+            color: #cccccc;
+        }
     </style>
 </head>
 
 <body>
     <!-- IN-GAME UI -->
     <div id="ui_layer">
+
+        <div id="dashboard_button_panel">
+            <button
+                id="dashboard_toggle_button"
+                class="btn btn-primary"
+            >Ship Controls</button>
+            <br>
+            <button
+                id="inventory_toggle"
+                class="btn btn-primary"
+            >Inventory</button>
+        </div>
 
         <div id="debug">
             <p
@@ -119,15 +149,8 @@
         </div>
 
         <div id="dashboard">
-            <div id="dashboard_toggle">
-                <button
-                    id="dashboard_toggle_button"
-                    class="btn btn-primary"
-                >Ship Controls</button>
-            </div>
             <center>
                 <div id="dashboard_main">
-
                     <center>Location: <span id="dashboard_coordinates"> </span><br>
                         <progress
                             id="progress_fuel"
@@ -168,9 +191,29 @@
                         >Right</button>
                     </center>
                 </div>
-            </center>
+
+
 
         </div>
+
+
+        <div id="inventory">
+            <center>
+                <p class="display-4">Inventory</p>
+                <p
+                    id="inventory_wallet_text"
+                    class="lead"
+                > </p>
+                <div id="inventory_table"> </div>
+                <button
+                    class="btn btn-danger exit_button"
+                    id="inventory_exit_button"
+                >Exit</button>
+            </center>
+        </div>
+
+        </center>
+
 
         <div id="planet_name_div">
             <p
@@ -180,7 +223,7 @@
             <button
                 id="access_planet_button"
                 class="btn btn-primary w-100"
-            >Land</button>
+            >Open</button>
         </div>
 
         <div
@@ -191,11 +234,6 @@
                 id="planet_menu_name"
                 class="display-4"
             > </p>
-
-            <!-- <p
-                class="lead"
-                id="planet_resources"
-            > </p> -->
 
             <table
                 class="table"
@@ -219,11 +257,12 @@
                 </thead>
 
             </table>
-
-            <button
-                class="btn btn-primary"
-                id="planet_menu_leave_button"
-            >Leave</button>
+            <center>
+                <button
+                    class="btn btn-danger exit_button"
+                    id="planet_menu_leave_button"
+                >Exit</button>
+            </center>
         </div>
 
         <p id="version">Version 0.0.3: Touch Controls</p>

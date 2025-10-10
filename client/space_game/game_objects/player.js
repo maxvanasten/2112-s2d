@@ -71,12 +71,74 @@ export default {
             const ui = core._get_object_by_identifier("ui_manager");
             ui.toggleVisibility(ui, "dashboard_main");
         };
+
+        const toggleFunc = () => {
+            const ui = core._get_object_by_identifier("ui_manager");
+
+            const inventory_visibility = ui._get_visibility(ui, "inventory");
+            if (inventory_visibility == "hidden" || inventory_visibility == false) {
+                // Update wallet text
+                const wallet_text = `You are currently carrying ${self.wallet.cash} in cash. Your bank balance is: ${self.wallet.bank}`;
+                ui.setInnerHTML(ui, "inventory_wallet_text", wallet_text);
+                // Update inventory table
+                let inventory_table = `<table
+                class="table"
+                id="inventory_table"
+            >
+                <thead>
+                    <tr>
+                        <th scope="col">
+                            <center>Item Name</center>
+                        </th>
+                        <th scope="col">
+                            <center>Useable</center>
+                        </th>
+                        <th scope="col">
+                            <center>Tradeable</center>
+                        </th>
+                        <th scope="col">
+                            <center>Quantity</center>
+                        </th>
+                    </tr>
+                </thead>`;
+
+                self.current_ship.storage.forEach((itemstack) => {
+                    inventory_table += `<th scope="row"><center>${itemstack.name}</center></td>`;
+                    if (itemstack.is_useable) {
+                        inventory_table += `<td><center><button class="btn btn-primary m-2">Use</button></center></td>`;
+                    } else {
+                        inventory_table += `<td></td>`;
+                    }
+                    if (itemstack.is_tradeable) {
+                        inventory_table += `<td><center>Yes</center></td>`;
+                    } else {
+                        inventory_table += `<td><center>No</center></td>`;
+                    }
+                    inventory_table += `<td><center>${itemstack.amount} ${itemstack.unit_short}</center></td></tr>`;
+                })
+                ui.setInnerHTML(ui, "inventory_table", inventory_table);
+                ui.setVisibility(ui, "planet_name_div", "hidden");
+                ui.setVisibility(ui, "planet_menu_div", "hidden");
+
+            } else {
+                // Turning it off
+                if (self.planet) {
+                    ui.setVisibility(ui, "planet_name_div", "visible");
+                }
+            }
+            ui.toggleVisibility(ui, "inventory");
+        }
+
+        ui.getElement("inventory_toggle").onclick = toggleFunc;
+        ui.getElement("inventory_exit_button").onclick = toggleFunc;
+
         ui.getElement("access_planet_button").onclick = () => {
             self.landed = true;
             self.current_ship.thrust = 0;
             const ui = core._get_object_by_identifier("ui_manager");
             ui.setVisibility(ui, "planet_name_div", "hidden");
             ui.setVisibility(ui, "planet_menu_div", "visible");
+
             ui.setInnerHTML(ui, "planet_menu_name", self.planet.name);
             ui.setInnerHTML(ui, "planet_menu_table", self.planet.get_resource_table(self.planet));
         }
