@@ -24,6 +24,10 @@ export default {
     scale: 1.5,
     planet: false,
     landed: false,
+    wallet: {
+        cash: 500,
+        bank: 0
+    },
     init: (core, self) => {
         self.sprite.render_width = self.sprite.render_width * self.scale;
         self.sprite.render_height = self.sprite.render_height * self.scale;
@@ -53,9 +57,14 @@ export default {
             fuelUsageNow: 0,
             thrust: 0.0,
             thrustDelta: 0.005,
+            storage: []
         };
         // self.last_switched_ships = 0;
         // self.last_docked_vessel = 0;
+
+        // Give items for testing
+        const item_manager = core._get_object_by_identifier("item_manager");
+        item_manager.add_to_inventory(item_manager, self.current_ship.storage, "fuel", 500);
 
         const ui = core._get_object_by_identifier("ui_manager");
         ui.getElement("dashboard_toggle_button").onclick = () => {
