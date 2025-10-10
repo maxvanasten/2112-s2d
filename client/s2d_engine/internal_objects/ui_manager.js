@@ -44,4 +44,10 @@ ui_manager.setVisibility = (self, identifier, visibility) => {
     element.style.visibility = visibility;
 }
 
+ui_manager._get_visibility = (self, identifier) => {
+    const element = self.getElement(identifier);
+    if (!element.style) return false;
+    return element.style.visibility || false;
+}
+
 export default ui_manager;
