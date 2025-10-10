@@ -37,6 +37,8 @@ export default {
             buy_price: 0,
             sell_price: 0,
             amount: 0,
+            is_useable: true,
+            is_tradeable: true,
         }
     },
     generate_planet_resources: (self, planet_type) => {
