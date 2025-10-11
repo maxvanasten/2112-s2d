@@ -49,28 +49,21 @@ export default {
             is_tradeable: true,
         }
     },
+    generate_item: (self, identifier, amount, buy, sell) => {
+        const item = self.get_item(self, identifier);
+
+        const base_price = self.generate_item_price(self, item.id);
+        if (buy) item.buy_price = (base_price * 1.1).toFixed(2);
+        if (sell) item.sell_price = (base_price * 0.9).toFixed(2);
+        item.amount = amount;
+
+        return item;
+    },
     generate_planet_resources: (self, planet_type) => {
         const resources = [];
         if (planet_type == "fuel_planet") {
             // Buy and sell fuel
-            const fuel_item = self.get_item(self, "fuel");
-            const base_price = self.generate_item_price(self, fuel_item.id);
-
-            fuel_item.buy_price = (base_price * 1.2).toFixed(2);
-            fuel_item.sell_price = (base_price * 0.8).toFixed(2);
-            fuel_item.amount = Math.floor(Math.random() * 125000);
-
-            resources.push(fuel_item);
-
-            // Temp test uranium
-            const uranium_item = self.get_item(self, "uranium");
-            const uranium_price = self.generate_item_price(self, uranium_item.id);
-
-            uranium_item.buy_price = (uranium_price * 1.05).toFixed(2);
-            uranium_item.sell_price = (uranium_price * 0.95).toFixed(2);
-            uranium_item.amount = Math.floor(Math.random() * 100);
-
-            resources.push(uranium_item);
+            resources.push(self.generate_item(self, "fuel", Math.floor(Math.random() * 5000), true, true));
         } else if (planet_type == "mining_planet") {
             // Buy ores
         } else if (planet_type == "industrial_planet") {
