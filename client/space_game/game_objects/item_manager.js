@@ -70,6 +70,10 @@ export default {
             // Sell ores and buy ores
         }
 
+        resources.forEach((resource) => {
+            if (Math.floor(resource.amount) <= 0) resources.splice(resources.indexOf(resource), 1);
+        })
+
         return resources;
     },
     // An inventory is simply an array of itemstacks, an itemstack only holds the identifier and the amount of items
