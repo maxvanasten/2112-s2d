@@ -114,7 +114,7 @@ export default {
                 width: size,
                 height: size,
             },
-            resources: item_manager.generate_planet_resources(item_manager, "fuel_planet"),
+            resources: [],
             cash: 0,
             get_resource_string: (self) => {
                 let str = "";
@@ -168,6 +168,11 @@ export default {
                     (self.options.max_rotation_speed -
                         self.options.min_rotation_speed);
                 planet.cash = (Math.random() * 10000);
+
+                const types = ["fuel_planet", "mining_planet"];
+                planet.type = types[Math.floor(Math.random() * types.length)];
+
+                planet.resources = item_manager.generate_planet_resources(item_manager, planet.type)
             },
             update: (core, self, delta) => {
                 self.rotation += self.rotation_speed * delta;
@@ -189,6 +194,13 @@ export default {
                             ui.setVisibility(ui, "planet_name_div", "visible");
                         }
                         ui.setInnerHTML(ui, "planet_name", player.planet.name);
+
+                        let type = "Unknown";
+
+                        if (player.planet.type == "fuel_planet") type = "Fuel Planet";
+                        if (player.planet.type == "mining_planet") type = "Mining Planet";
+
+                        ui.setInnerHTML(ui, "planet_type", type);
 
                         // NOTE: set data on popup element
                         // TODO: Make dynamic planet descriptions that involve the utilities the planet has
