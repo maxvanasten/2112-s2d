@@ -78,7 +78,7 @@ export default {
             const inventory_visibility = ui._get_visibility(ui, "inventory");
             if (inventory_visibility == "hidden" || inventory_visibility == false) {
                 // Update wallet text
-                const wallet_text = `You are currently carrying ${self.wallet.cash} in cash. Your bank balance is: ${self.wallet.bank}`;
+                const wallet_text = `You are currently carrying ${self.wallet.cash.toFixed(2)} in cash. Your bank balance is: ${self.wallet.bank.toFixed(2)}`;
                 ui.setInnerHTML(ui, "inventory_wallet_text", wallet_text);
                 // Update inventory table
                 let inventory_table = `<table
@@ -132,7 +132,7 @@ export default {
         ui.getElement("inventory_toggle").onclick = toggleFunc;
         ui.getElement("inventory_exit_button").onclick = toggleFunc;
 
-        ui.getElement("access_planet_button").onclick = () => {
+        const reset_planet_menu = () => {
             self.landed = true;
             self.current_ship.thrust = 0;
             const ui = core._get_object_by_identifier("ui_manager");
@@ -141,7 +141,127 @@ export default {
 
             ui.setInnerHTML(ui, "planet_menu_name", self.planet.name);
             ui.setInnerHTML(ui, "planet_menu_table", self.planet.get_resource_table(self.planet));
+            ui.setInnerHTML(ui, "planet_cash", self.planet.cash.toFixed(2));
+
+            for (let button of ui._get_elements("trade_button")) {
+                button.onclick = () => {
+                    const ui = core._get_object_by_identifier("ui_manager");
+                    ui.setVisibility(ui, "input", "visible");
+                    ui.setVisibility(ui, "planet_menu_div", "hidden");
+
+                    let item = false;
+                    self.planet.resources.forEach((resource) => {
+                        if (resource.id == button.getAttribute("item_id")) {
+                            item = resource;
+                        }
+                    })
+                    if (!item) throw Error("Item is false/undefined");
+
+                    // Check if player has this item
+                    let owned_ship = 0;
+                    self.current_ship.storage.forEach((itemstack) => {
+                        if (itemstack.id == item.id) owned_ship = itemstack.amount;
+                    })
+
+                    let action = "";
+                    if (button.getAttribute("trade") == "buy") action = "Buying";
+                    if (button.getAttribute("trade") == "sell") action = "Selling";
+                    if (action == "") throw Error("action is empty")
+
+                    ui.setInnerHTML(ui, "input_header", `${action} ${item.name} @ ${item.buy_price}`);
+
+                    ui.setInnerHTML(ui, "item_unit", item.unit_short);
+                    ui.setInnerHTML(ui, "input_owned_ship", owned_ship);
+                    ui.setInnerHTML(ui, "input_cash_ship", self.wallet.cash.toFixed(2));
+                    ui.setInnerHTML(ui, "input_owned_planet", item.amount);
+                    ui.setInnerHTML(ui, "input_cash_planet", self.planet.cash.toFixed(2));
+
+                    // Initialize controls
+                    const inputFunc = (delta, max) => {
+                        const ui = core._get_object_by_identifier("ui_manager");
+                        const amount = +ui.getElement("input_amount").innerHTML;
+
+                        let can_afford = 0;
+                        let can_supply = 0;
+                        let price = 0;
+                        if (action == "Buying") {
+                            can_afford = Math.floor(self.wallet.cash / item.buy_price);
+                            can_supply = item.amount;
+                            price = item.buy_price;
+                        }
+                        if (action == "Selling") {
+                            can_afford = Math.floor(self.planet.cash / item.sell_price);
+                            can_supply = owned_ship;
+                            price = item.sell_price;
+                        }
+
+                        let new_amount = amount + delta;
+                        if (new_amount < 0) new_amount = 0;
+                        if (new_amount > can_supply) new_amount = can_supply;
+                        if (new_amount > can_afford) new_amount = can_afford;
+
+                        ui.setInnerHTML(ui, "input_amount", new_amount);
+                        ui.setInnerHTML(ui, "input_value", (new_amount * price).toFixed(2));
+                    }
+
+                    let max = 0;
+                    if (action == "Buying") max = item.amount;
+                    if (action == "Selling") max = owned_ship;
+
+                    const input_buttons = ui._get_elements("input_button");
+                    for (let input_button of input_buttons) {
+                        input_button.onclick = () => {
+                            inputFunc(+input_button.innerHTML, +ui.getElement("input_owned_planet").innerHTML);
+                        }
+                    }
+
+                    ui.getElement("input_confirm").onclick = () => {
+                        const amount = ui._get_number_from("input_amount");
+                        const value = +ui._get_number_from("input_value");
+
+                        const item_manager = core._get_object_by_identifier("item_manager");
+
+                        if (action == "Buying") {
+                            item_manager.add_to_inventory(item_manager, self.current_ship.storage, item.id, amount);
+                            item_manager.take_from_inventory(item_manager, self.planet.resources, item.id, amount);
+                            self.wallet.cash -= value;
+                            self.planet.cash += value;
+                        }
+                        if (action == "Selling") {
+                            item_manager.add_to_inventory(item_manager, self.planet.resources, item.id, amount);
+                            item_manager.take_from_inventory(item_manager, self.current_ship.storage, item.id, amount);
+                            self.wallet.cash += value;
+                            self.planet.cash -= value
+                        }
+
+                        ui.setVisibility(ui, "input", "hidden");
+                        ui.setInnerHTML(ui, "planet_menu_table", self.planet.get_resource_table(self.planet));
+                        ui.setInnerHTML(ui, "planet_cash", self.planet.cash.toFixed(2));
+                        ui.setVisibility(ui, "planet_menu_div", "visible");
+
+                        // Reset input menu
+                        ui.setInnerHTML(ui, "input_amount", 0);
+                        ui.setInnerHTML(ui, "input_value", 0);
+                        ui.setInnerHTML(ui, "input_owned_ship", 0);
+                        ui.setInnerHTML(ui, "input_owned_planet", 0);
+                        reset_planet_menu();
+                    }
+
+                    ui.getElement("input_cancel").onclick = () => {
+                        ui.setVisibility(ui, "input", "hidden");
+                        ui.setVisibility(ui, "planet_menu_div", "visible");
+                        ui.setInnerHTML(ui, "input_amount", 0);
+                        ui.setInnerHTML(ui, "input_value", 0);
+                        ui.setInnerHTML(ui, "input_owned_ship", 0);
+                        ui.setInnerHTML(ui, "input_owned_planet", 0);
+                        reset_planet_menu();
+                    }
+                }
+            }
         }
+
+        ui.getElement("access_planet_button").onclick = reset_planet_menu;
+
         ui.getElement("planet_menu_leave_button").onclick = () => {
             self.landed = false;
             const ui = core._get_object_by_identifier("ui_manager");

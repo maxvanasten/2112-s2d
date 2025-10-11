@@ -7,10 +7,18 @@ export default {
             id: "fuel",
             name: "Fuel",
             min_price: 2,
-            max_price: 200,
+            max_price: 10,
             unit_short: "L",
             unit_full: "Liters"
-        }
+        },
+        {
+            id: "uranium",
+            name: "Uranium",
+            min_price: 2000,
+            max_price: 2250,
+            unit_short: "KG",
+            unit_full: "Kilograms"
+        },
     ],
     get_item_ref: (self, identifier) => {
         let found_item = false;
@@ -53,6 +61,16 @@ export default {
             fuel_item.amount = Math.floor(Math.random() * 125000);
 
             resources.push(fuel_item);
+
+            // Temp test uranium
+            const uranium_item = self.get_item(self, "uranium");
+            const uranium_price = self.generate_item_price(self, uranium_item.id);
+
+            uranium_item.buy_price = (uranium_price * 1.05).toFixed(2);
+            uranium_item.sell_price = (uranium_price * 0.95).toFixed(2);
+            uranium_item.amount = Math.floor(Math.random() * 100);
+
+            resources.push(uranium_item);
         } else if (planet_type == "mining_planet") {
             // Buy ores
         } else if (planet_type == "industrial_planet") {

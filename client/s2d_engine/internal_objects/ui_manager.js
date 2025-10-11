@@ -50,4 +50,15 @@ ui_manager._get_visibility = (self, identifier) => {
     return element.style.visibility || false;
 }
 
+ui_manager._get_elements = (class_name) => {
+    const elements = document.getElementsByClassName(class_name);
+    console.log(`_get_elements: `)
+    console.log(elements);
+    return elements;
+}
+
+ui_manager._get_number_from = (id) => {
+    return Number(document.getElementById(id).innerHTML);
+}
+
 export default ui_manager;

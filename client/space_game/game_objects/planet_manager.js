@@ -115,6 +115,7 @@ export default {
                 height: size,
             },
             resources: item_manager.generate_planet_resources(item_manager, "fuel_planet"),
+            cash: 0,
             get_resource_string: (self) => {
                 let str = "";
 
@@ -152,8 +153,8 @@ export default {
 
                 self.resources.forEach((resource) => {
                     str += `<th scope="row">${resource.name}</td>`;
-                    str += `<td><button class="btn btn-primary m-2">${resource.buy_price}</button></td>`;
-                    str += `<td><button class="btn btn-danger m-2">${resource.sell_price}</button></td>`;
+                    str += `<td><button class="btn btn-primary m-2 trade_button" item_id="${resource.id}" trade="buy">${resource.buy_price}</button></td>`;
+                    str += `<td><button class="btn btn-danger m-2 trade_button" item_id="${resource.id}" trade="sell">${resource.sell_price}</button></td>`;
                     str += `<td>${resource.amount} ${resource.unit_short}</td></tr>`;
                 })
 
@@ -166,6 +167,7 @@ export default {
                     Math.random() *
                     (self.options.max_rotation_speed -
                         self.options.min_rotation_speed);
+                planet.cash = (Math.random() * 10000);
             },
             update: (core, self, delta) => {
                 self.rotation += self.rotation_speed * delta;

@@ -121,6 +121,28 @@
         #inventory_table {
             color: #cccccc;
         }
+
+        #input {
+            position: fixed;
+            top: 40%;
+            color: #cccccc;
+            background-color: #222222;
+            opacity: 90%;
+            justify-self: center;
+            width: 80%;
+            height: auto;
+            padding: 1%;
+            visibility: hidden;
+        }
+
+        #input_amount {
+            font-size: large;
+            margin: 2%;
+        }
+
+        #input_header {
+            font-size: x-large;
+        }
     </style>
 </head>
 
@@ -138,6 +160,41 @@
                 id="inventory_toggle"
                 class="btn btn-primary"
             >Inventory</button>
+        </div>
+
+        <div id="input">
+            <center>
+                <p id="input_header">Selling/Buying item_name @ item_price</p>
+                <p
+                    class="lead"
+                    id="input_owned"
+                >Ship: <span id="input_owned_ship">0</span> <span id="item_unit"> </span>, $<span id="input_cash_ship">
+                    </span>
+                    <br>
+                    Planet: <span id="input_owned_planet">0</span> <span id="item_unit"> </span>, $<span
+                        id="input_cash_planet"
+                    > </span>
+                </p>
+                <button class="btn btn-danger input_button">-100</button>
+                <button class="btn btn-danger input_button">-10</button>
+                <button class="btn btn-danger input_button">-1</button>
+                <span id="input_amount">0</span>
+                <button class="btn btn-success input_button">+1</button>
+                <button class="btn btn-success input_button">+10</button>
+                <button class="btn btn-success input_button">+100</button>
+                <hr>
+                <p class="lead">Value: <span id="input_value">0</span></p>
+                <hr>
+                <button
+                    id="input_cancel"
+                    class="btn btn-warning"
+                >Cancel</button>
+                <button
+                    id="input_confirm"
+                    class="btn btn-primary"
+                >Confirm</button>
+
+            </center>
         </div>
 
         <div id="debug">
@@ -234,6 +291,9 @@
                 id="planet_menu_name"
                 class="display-4"
             > </p>
+            <center>
+                <p class="lead">Cash: <span id="planet_cash">0</span></p>
+            </center>
 
             <table
                 class="table"
@@ -265,7 +325,7 @@
             </center>
         </div>
 
-        <p id="version">Version 0.0.3: Touch Controls</p>
+        <p id="version">Version 0.5.0: Buying/Selling items on planets</p>
     </div>
 
     <canvas id="game_canvas"></canvas>
