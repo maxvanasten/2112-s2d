@@ -19,6 +19,30 @@ export default {
             unit_short: "KG",
             unit_full: "Kilograms"
         },
+        {
+            id: "coal",
+            name: "Coal",
+            min_price: 1,
+            max_price: 3,
+            unit_short: "KG",
+            unit_full: "Kilograms"
+        },
+        {
+            id: "gold",
+            name: "Gold",
+            min_price: 20000,
+            max_price: 25000,
+            unit_short: "KG",
+            unit_full: "Kilograms"
+        },
+        {
+            id: "special_shard",
+            name: "Special Shard",
+            min_price: 50000,
+            max_price: 70000,
+            unit_short: "Pieces",
+            unit_full: "Pieces"
+        }
     ],
     get_item_ref: (self, identifier) => {
         let found_item = false;
@@ -66,6 +90,9 @@ export default {
             resources.push(self.generate_item(self, "fuel", Math.floor(Math.random() * 5000), true, true));
         } else if (planet_type == "mining_planet") {
             // Buy ores
+            resources.push(self.generate_item(self, "coal", Math.floor(Math.random() * 250), true, false));
+            resources.push(self.generate_item(self, "gold", Math.floor(Math.random() * 25), true, false));
+            resources.push(self.generate_item(self, "special_shard", Math.floor(Math.random() * 5), true, false));
         } else if (planet_type == "industrial_planet") {
             // Sell ores and buy ores
         }
