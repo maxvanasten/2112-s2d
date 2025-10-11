@@ -199,7 +199,7 @@ export default {
 
                         if (player.planet.type == "fuel_planet") type = "Fuel Planet";
                         if (player.planet.type == "mining_planet") type = "Mining Planet";
-
+                        console.log(`PLANET_TYPE: ${type}`);
                         ui.setInnerHTML(ui, "planet_type", type);
 
                         // NOTE: set data on popup element
