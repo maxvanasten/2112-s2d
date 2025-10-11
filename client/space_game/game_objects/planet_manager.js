@@ -174,8 +174,8 @@ export default {
 
                 planet.resources = item_manager.generate_planet_resources(item_manager, planet.type)
             },
-            update: (core, self, delta) => {
-                self.rotation += self.rotation_speed * delta;
+            update: (core, planet, delta) => {
+                planet.rotation += planet.rotation_speed * delta;
 
                 // TODO: Check if player can interact
                 const player = core._get_object_by_identifier("player");
@@ -183,13 +183,13 @@ export default {
 
                 // TODO: get popup element reference from ui manager
                 if (
-                    player.global_position.distance(self.global_position) <
-                    self.size
+                    player.global_position.distance(planet.global_position) <
+                    planet.size
                 ) {
-                    if (!self.in_range) {
+                    if (!planet.in_range) {
 
-                        self.in_range = true;
-                        player.planet = self;
+                        planet.in_range = true;
+                        player.planet = planet;
                         if (ui._get_visibility(ui, "inventory") != "visible") {
                             ui.setVisibility(ui, "planet_name_div", "visible");
                         }
@@ -207,8 +207,8 @@ export default {
                     }
 
                 } else {
-                    if (!self.in_range) return;
-                    self.in_range = false;
+                    if (!planet.in_range) return;
+                    planet.in_range = false;
                     // Unset
                     player.planet = false;
                 }
